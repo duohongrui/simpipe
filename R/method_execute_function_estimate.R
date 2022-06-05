@@ -3,7 +3,8 @@ method_execute_function_estimate <- function(
   method,
   other_prior,
   seed,
-  verbose
+  verbose,
+  env
 ){
   # Select the right method
   env <- asNamespace("simmethods")
@@ -19,6 +20,5 @@ method_execute_function_estimate <- function(
 
   # Output
   estimate_output
-
 }
 

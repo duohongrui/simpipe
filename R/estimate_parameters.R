@@ -29,7 +29,7 @@ estimate_parameters <- function(
   ref_data,
   method,
   other_prior = list(),
-  seed = random_seed(),
+  seed = simutils::random_seed(),
   verbose = TRUE,
   use_docker = FALSE
 ){
@@ -67,24 +67,25 @@ estimate_parameters <- function(
           method = design$method_id[er],
           other_prior = other_prior,
           seed = seed,
-          verbose = verbose
+          verbose = verbose,
+          env = env
         )
       }
     }
   )
   result_names <- paste0(design$dataset_id, "_", design$method_id)
-  stats::setNames(result, result_names)
+  result <- stats::setNames(result, result_names)
   return(result)
 }
 
 
 
-# a <- matrix(rpois(n = 10^6, lambda = 0.5), nrow = 1000)
-# colnames(a) <- paste0("cell_", 1:ncol(a))
-# rownames(a) <- paste0("gene_", 1:nrow(a))
-#
-# b <- matrix(rpois(n = 10^6, lambda = 0.1), nrow = 1000)
-# colnames(b) <- paste0("cell_", 1:ncol(b))
-# rownames(b) <- paste0("gene_", 1:nrow(b))
-#
-# ref_data <- list(a = a, b = b)
+a <- matrix(rpois(n = 10^6, lambda = 0.5), nrow = 1000)
+colnames(a) <- paste0("cell_", 1:ncol(a))
+rownames(a) <- paste0("gene_", 1:nrow(a))
+
+b <- matrix(rpois(n = 10^6, lambda = 0.1), nrow = 1000)
+colnames(b) <- paste0("cell_", 1:ncol(b))
+rownames(b) <- paste0("gene_", 1:nrow(b))
+
+ref_data <- list(a = a, b = b)
