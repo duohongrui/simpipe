@@ -80,12 +80,12 @@ estimate_parameters <- function(
 
 
 
-a <- matrix(rpois(n = 10^6, lambda = 0.5), nrow = 1000)
-colnames(a) <- paste0("cell_", 1:ncol(a))
-rownames(a) <- paste0("gene_", 1:nrow(a))
-
-b <- matrix(rpois(n = 10^6, lambda = 0.1), nrow = 1000)
-colnames(b) <- paste0("cell_", 1:ncol(b))
-rownames(b) <- paste0("gene_", 1:nrow(b))
-
-ref_data <- list(a = a, b = b)
+# a <- matrix(rpois(n = 10^6, lambda = 0.5), nrow = 1000)
+# colnames(a) <- paste0("cell_", 1:ncol(a))
+# rownames(a) <- paste0("gene_", 1:nrow(a))
+#
+# b <- matrix(rpois(n = 10^6, lambda = 0.1), nrow = 1000)
+# colnames(b) <- paste0("cell_", 1:ncol(b))
+# rownames(b) <- paste0("gene_", 1:nrow(b))
+#
+# ref_data <- list(a = a, b = b)
