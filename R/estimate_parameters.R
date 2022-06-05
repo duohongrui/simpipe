@@ -67,8 +67,7 @@ estimate_parameters <- function(
           method = design$method_id[er],
           other_prior = other_prior,
           seed = seed,
-          verbose = verbose,
-          env = env
+          verbose = verbose
         )
       }
     }
