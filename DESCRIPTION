@@ -1,11 +1,39 @@
 Package: simpipe
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: A standard pipeline of simulating single-cell RNA sequencing data
+Version: 0.0.0.9000
+Authors@R: 
+    c(person("Hongrui", "Duo", role = c("aut", "cre"),
+      email = "Duohongrui@cqnu.edu.cn",
+      comment = c(ORCID = "0000-0001-8683-015X")),
+      person("Bo", "Li", role = c("aut"),
+      email = "libo@cqnu.edu.cn",
+      comment = c(ORCID = "0000-0001-9944-0003")))
+Maintainer: Hongrui Duo <duohongrui@cqnu.edu.cn>
+Description: The series steps of estimating parameters from real data, simulating
+    scRNA-seq datasets and evaluating the simulated data with real data are packaged
+    in this project. The prevalent methods of simulating scRNA-seq datasets are 
+    involved in this project and we will still add new important methods in the future.
+License: GPL-3
+Depends: R (>= 4.0)
+Imports: tidyr,
+         purrr,
+         assertthat,
+         babelwhale,
+         dplyr,
+         simutils,
+         simmethods,
+         dynwrap
+Remotes:  
+    duohongrui/simmethods@master,
+    duohongrui/simutils@master,
+    dynverse/dynwrap@master
+URL: https://github.com/duohongrui/simpipe
+BugReports: https://github.com/duohongrui/simpipe/issues
 Encoding: UTF-8
 LazyData: true
+biocViews:
+Author: Hongrui Duo [aut, cre] (<https://orcid.org/0000-0001-8683-015X>),
+    Bo Li [aut] (<https://orcid.org/0000-0001-9944-0003>)
+RoxygenNote: 7.1.2
+Roxygen: list(markdown = TRUE)
