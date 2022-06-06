@@ -23,7 +23,8 @@ Imports: tidyr,
          dplyr,
          simutils,
          simmethods,
-         dynwrap
+         dynwrap,
+         stringr
 Remotes:  
     duohongrui/simmethods@master,
     duohongrui/simutils@master,

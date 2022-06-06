@@ -11,11 +11,18 @@ method_execute_function_simulate <- function(
   right_method <- paste0(method, "_simulation")
   assign(right_method, get(right_method, envir = env))
 
-  # Change parameters
-  parameters <- set_parameters(parameters = parameters,
-                               other_prior = other_prior,
-                               method)
+  # When the parameter is NULL
+  if(is.null(parameters)){
+    cat("Parameters will be set by default")
+    parameters <- simutils::default_parameters(method)
+  }
 
+  # Change parameters
+  if(!is.null(other_prior)){
+    parameters <- simutils::set_parameters(parameters = parameters,
+                                           other_prior = other_prior,
+                                           method = method)
+  }
   # Match arguments existing in the method function
   arguments <- dplyr::lst(parameters,
                           other_prior,

@@ -74,7 +74,8 @@ estimate_parameters <- function(
     }
   )
   result_names <- paste0(design$dataset_id, "_", design$method_id)
-  result <- stats::setNames(result, result_names)
+  result <- stats::setNames(result, result_names) %>%
+    simutils::add_class(define_class = "simpipe_estimation")
   return(result)
 }
 
@@ -89,4 +90,4 @@ estimate_parameters <- function(
 # rownames(b) <- paste0("gene_", 1:nrow(b))
 #
 # ref_data <- list(a = a, b = b)
-# estimate_output <- simpipe::estimate_parameters(ref_data = ref_data, method = "splat", seed = 10, verbose = TRUE)
+# estimate_output <- estimate_parameters(ref_data = ref_data, method = "splat", seed = 10, verbose = TRUE)
