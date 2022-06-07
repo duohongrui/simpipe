@@ -68,16 +68,17 @@ simulate_datasets <- function(
     }
     ### Users set "n" or not
     if(is.null(other_prior[["n"]])){
-      warning("You do not set 'n' as the time(s) that every method will be executed, and it will be 1")
+      cat("You do not set 'n' as the time(s) that every method will be executed, and it will be 1 \n")
       other_prior[["n"]] <- 1
     }
     times <- other_prior[["n"]]
     execute_time <- length(method)*times
     ### Users set seed or not
     if(length(seed) != execute_time){
-      warning("The length of seeds is not identical to the time(s) that every method will be executed")
+      cat("The length of seeds is not identical to the time(s) that every method will be executed \n")
       seed <- seq_len(execute_time)
-      warning(paste0("The seed will be set as: ", seed))
+      seed_chara <- paste(as.character(seed), collapse = " ")
+      cat(paste0("The seed will be set as: ", seed_chara, "\n"))
     }
     method <- rep(method, each = times)
   }
@@ -118,7 +119,7 @@ simulate_datasets <- function(
   )
   # Prepare list names----------------------------------------------------------
   if(!is.null(method)){
-    list_names <- paste0(rep(method, each = times), "_", rep(seq_len(times), length(method)))
+    list_names <- paste0(method, "_", rep(seq_len(times), length(unique(method))))
   }else{
     list_names <- names(parameters)
   }
@@ -180,3 +181,10 @@ simulate_datasets <- function(
 #                              other_prior = list(batchCells = c(1000,1000),
 #                                                 group.prob = c(0.5, 0.5),
 #                                                 nGenes = 5000))
+# result8 <- simulate_datasets(method = "splat",
+#                              parameters = NULL,
+#                              return_format = "Seurat",
+#                              verbose = T,
+#                              seed = 111,
+#                              use_docker = FALSE,
+#                              other_prior = list(n = 10))
