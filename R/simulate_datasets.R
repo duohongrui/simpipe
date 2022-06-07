@@ -51,24 +51,50 @@ simulate_datasets <- function(
     assertthat::assert_that("simpipe_estimation" %in% class(parameters))
   }
   # Prepare methods-------------------------------------------------------------
+
+  ## All methods
+  all_methods <- simmethods::get_method()
+
+  ## If method is NULL
   if(is.null(method) & !is.null(parameters)){
     method <- stringr::str_split(names(parameters), pattern = "_", simplify = T)[, 2]
   }
 
-  all_methods <- simmethods::get_method()
-  if(method[1] == "all"){
-    method <- names(all_methods)
+  ## If method is not NULL
+  if(!is.null(method) & is.null(parameters)){
+    ### If method is all
+    if(method[1] == "all"){
+      method <- names(all_methods)
+    }
+    ### Users set "n" or not
+    if(is.null(other_prior[["n"]])){
+      warning("You do not set 'n' as the time(s) that every method will be executed, and it will be 1")
+      other_prior[["n"]] <- 1
+    }
+    times <- other_prior[["n"]]
+    execute_time <- length(method)*times
+    ### Users set seed or not
+    if(length(seed) != execute_time){
+      warning("The length of seeds is not identical to the time(s) that every method will be executed")
+      seed <- seq_len(execute_time)
+      warning(paste0("The seed will be set as: ", seed))
+    }
+    method <- rep(method, each = times)
   }
+  ## Assert that method names are right
   assertthat::assert_that(all(method %in% names(all_methods)))
 
   # Run methods with each estimation and each method----------------------------
-
   result <- purrr::map(
     .x = seq_len(length(method)),
     .f = function(id) {
-      seed <- ifelse(is.null(seed), random_seed(), seed)
+      # Users have performed the estimation step
       if(!is.null(parameters)){
         parameters <- parameters[[names(parameters)[id]]][["estimate_result"]]
+      }
+      # Users have not performed the estimation step
+      if(!is.null(other_prior[["n"]])){
+        seed <- seed[id]
       }
       if(use_docker){
         method_execute_container_simulate(
@@ -91,8 +117,8 @@ simulate_datasets <- function(
     }
   )
   # Prepare list names----------------------------------------------------------
-  if(is.null(parameters)){
-    list_names <- method
+  if(!is.null(method)){
+    list_names <- paste0(rep(method, each = times), "_", rep(seq_len(times), length(method)))
   }else{
     list_names <- names(parameters)
   }
