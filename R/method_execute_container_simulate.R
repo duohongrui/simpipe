@@ -3,10 +3,11 @@
 #' @importFrom babelwhale list_docker_images pull_container
 #' @importFrom tidyr unite
 #' @importFrom dplyr pull
-method_execute_container_estimate <- function(
-  ref_data,
+method_execute_container_simulate <- function(
+  parameters,
   method,
   other_prior,
+  return_format,
   seed,
   verbose
 ){
@@ -18,9 +19,9 @@ method_execute_container_estimate <- function(
   temp_input_path <- file.path(temp_dir, "input.rds") %>% simutils::fix_path()
 
   # Process datasets------------------------------------------------------------
-  ## 1. Convert ref_data into .rds or .h5 file and save to input path
+  ## 1. Convert parameters into .rds and save to input path
   # simutils::write_h5files(data = ref_data, file_path = temp_input_path)
-  saveRDS(ref_data, file = temp_input_path)
+  saveRDS(parameters, file = temp_input_path)
 
   # Prepare the input parameters-----------------------------------------------
   ## 1. docker image working directory
@@ -54,7 +55,10 @@ method_execute_container_estimate <- function(
   container_id <- "duohongrui/simpipe"
 
   ## 8. step (estimation or simulation)
-  step <- "estimation"
+  step <- "simulation"
+
+  ## 9. Return format (list, SingleCellExperiment, Seurat, h5ad)
+  return_format <- return_format
 
   # Save command parameters
   input_meta <- list(container_id = container_id,
@@ -66,6 +70,7 @@ method_execute_container_estimate <- function(
                      step = step,
                      seed = seed,
                      method = method,
+                     return_format = return_format,
                      other_prior = other_prior)
   saveRDS(input_meta, file.path(local_path, "input_meta.rds"))
 
@@ -88,5 +93,3 @@ method_execute_container_estimate <- function(
   readRDS(file = file.path(local_path, "output.rds"))
 
 }
-
-

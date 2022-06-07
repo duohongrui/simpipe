@@ -27,8 +27,8 @@ method_execute_function_simulate <- function(
   arguments <- dplyr::lst(parameters,
                           other_prior,
                           return_format,
-                          seed,
-                          verbose)
+                          verbose,
+                          seed)
   arguments <- arguments[intersect(names(arguments), names(formals(right_method)))]
 
   # Execute estimation step by do.call and pass the arguments to the estimation function

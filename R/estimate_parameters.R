@@ -42,7 +42,7 @@ estimate_parameters <- function(
 
   # Prepare methods-------------------------------------------------------------
   all_methods <- simmethods::get_method()
-  if(method == "all"){
+  if(method[1] == "all"){
     method <- names(all_methods)
   }
   assertthat::assert_that(all(method %in% names(all_methods)))
@@ -85,9 +85,14 @@ estimate_parameters <- function(
 # colnames(a) <- paste0("cell_", 1:ncol(a))
 # rownames(a) <- paste0("gene_", 1:nrow(a))
 #
-# b <- matrix(rpois(n = 10^6, lambda = 0.1), nrow = 1000)
+# b <- matrix(rpois(n = 10^6, lambda = 0.5), nrow = 1000)
 # colnames(b) <- paste0("cell_", 1:ncol(b))
 # rownames(b) <- paste0("gene_", 1:nrow(b))
 #
 # ref_data <- list(a = a, b = b)
-# estimate_output <- estimate_parameters(ref_data = ref_data, method = "splat", seed = 10, verbose = TRUE)
+# estimate_output <- estimate_parameters(ref_data = ref_data,
+#                                        method = "splat",
+#                                        seed = 10,
+#                                        verbose = TRUE,
+#                                        use_docker = TRUE)
+

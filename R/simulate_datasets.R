@@ -16,7 +16,9 @@
 #' simulation step, the number of cells, genes, groups, batches, the percent of
 #' DEGs and other variables are usually customed, so before simulating a dataset
 #' you must point it out.
-#' @param seed A random seed.
+#' @param seed A random seed. An integer or a vector of integers. If you want to
+#' simulate twice or more times by every method you have chosen, it should be a
+#' vector. If you do not input this parameter, the default value(s) will be used.
 #' @param return_format A character. Alternatives choices: list, SingleCellExperiment,
 #' Seurat and h5ad.
 #' @param verbose Logical. Whether to return messages or not.
@@ -54,7 +56,7 @@ simulate_datasets <- function(
   }
 
   all_methods <- simmethods::get_method()
-  if(method == "all"){
+  if(method[1] == "all"){
     method <- names(all_methods)
   }
   assertthat::assert_that(all(method %in% names(all_methods)))
@@ -69,13 +71,13 @@ simulate_datasets <- function(
         parameters <- parameters[[names(parameters)[id]]][["estimate_result"]]
       }
       if(use_docker){
-        # method_execute_container_simulate(
-        # parameters = parameters,
-        # method = method[id],
-        # other_prior = other_prior,
-        # return_format = return_format,
-        # seed = seed,
-        # verbose = verbose)
+        method_execute_container_simulate(
+        parameters = parameters,
+        method = method[id],
+        other_prior = other_prior,
+        return_format = return_format,
+        seed = seed,
+        verbose = verbose)
       }else{
         method_execute_function_simulate(
           parameters = parameters,
@@ -102,4 +104,53 @@ simulate_datasets <- function(
 #                             parameters = estimate_output,
 #                             seed = 10,
 #                             return_format = "h5ad",
-#                             verbose = T)
+#                             verbose = T,
+#                             use_docker = TRUE)
+#
+# result2 <- simulate_datasets(method = NULL,
+#                             parameters = estimate_output,
+#                             seed = 10,
+#                             return_format = "SingleCellExperiment",
+#                             verbose = T,
+#                             use_docker = TRUE)
+#
+# result3 <- simulate_datasets(method = NULL,
+#                             parameters = estimate_output,
+#                             seed = 10,
+#                             return_format = "list",
+#                             verbose = T,
+#                             use_docker = TRUE)
+#
+# result4 <- simulate_datasets(method = NULL,
+#                             parameters = estimate_output,
+#                             seed = 10,
+#                             return_format = "Seurat",
+#                             verbose = T,
+#                             use_docker = TRUE)
+#
+# result5 <- simulate_datasets(method = "splat",
+#                             parameters = NULL,
+#                             seed = 10,
+#                             return_format = "Seurat",
+#                             verbose = T,
+#                             use_docker = TRUE)
+#
+# result6 <- simulate_datasets(method = NULL,
+#                              parameters = estimate_output,
+#                              seed = 10,
+#                              return_format = "Seurat",
+#                              verbose = T,
+#                              use_docker = TRUE,
+#                              other_prior = list(batchCells = c(1000,1000),
+#                                                 group.prob = c(0.5, 0.5),
+#                                                 nGenes = 5000))
+#
+# result7 <- simulate_datasets(method = NULL,
+#                              parameters = estimate_output,
+#                              seed = 10,
+#                              return_format = "Seurat",
+#                              verbose = T,
+#                              use_docker = TRUE,
+#                              other_prior = list(batchCells = c(1000,1000),
+#                                                 group.prob = c(0.5, 0.5),
+#                                                 nGenes = 5000))

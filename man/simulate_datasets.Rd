@@ -29,7 +29,9 @@ simulation step, the number of cells, genes, groups, batches, the percent of
 DEGs and other variables are usually customed, so before simulating a dataset
 you must point it out.}
 
-\item{seed}{A random seed.}
+\item{seed}{A random seed. An integer or a vector of integers. If you want to
+simulate twice or more times by every method you have chosen, it should be a
+vector. If you do not input this parameter, the default value(s) will be used.}
 
 \item{return_format}{A character. Alternatives choices: list, SingleCellExperiment,
 Seurat and h5ad.}
