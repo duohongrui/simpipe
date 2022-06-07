@@ -118,7 +118,7 @@ simulate_datasets <- function(
     }
   )
   # Prepare list names----------------------------------------------------------
-  if(!is.null(method)){
+  if(is.null(parameters)){
     list_names <- paste0(method, "_", rep(seq_len(times), length(unique(method))))
   }else{
     list_names <- names(parameters)
