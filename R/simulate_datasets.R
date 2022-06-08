@@ -75,10 +75,11 @@ simulate_datasets <- function(
   ### Users set seed or not
   if(length(seed) != n){
     cat("The length of seeds is not identical to the time(s) that every method will be executed \n")
-    seed <- rep(seq_len(method), n)
-    seed_chara <- paste(as.character(unique(seed)), collapse = " ")
+    seed <- seq_len(n)*100
+    seed_chara <- paste(as.character(seed), collapse = " ")
     cat(paste0("The seed will be set as: ", seed_chara, " when performing every method\n"))
   }
+  seed <- rep(seed, length(method))
 
   # Prepare parameters----------------------------------------------------------
   parameters <- rep(parameters, each = n)
@@ -89,14 +90,14 @@ simulate_datasets <- function(
     .f = function(id) {
       # Users have performed the estimation step
       if(!is.null(parameters)){
-        parameters <- parameters[[names(parameters)[id]]][["estimate_result"]]
+        parameters <- parameters[[id]][["estimate_result"]]
       }
       # Seed
       seed <- seed[id]
       if(use_docker){
         method_execute_container_simulate(
         parameters = parameters,
-        method = method[id],
+        method = every_exec_method[id],
         other_prior = other_prior,
         return_format = return_format,
         seed = seed,
@@ -104,7 +105,7 @@ simulate_datasets <- function(
       }else{
         method_execute_function_simulate(
           parameters = parameters,
-          method = method[id],
+          method = every_exec_method[id],
           other_prior = other_prior,
           return_format = return_format,
           seed = seed,
@@ -147,6 +148,7 @@ simulate_datasets <- function(
 # result4 <- simulate_datasets(method = NULL,
 #                             parameters = estimate_output,
 #                             seed = 10,
+#                             n = 3,
 #                             return_format = "Seurat",
 #                             verbose = T,
 #                             use_docker = TRUE)
@@ -180,7 +182,18 @@ simulate_datasets <- function(
 # result8 <- simulate_datasets(method = "splat",
 #                              parameters = NULL,
 #                              return_format = "Seurat",
+#                              n = 5,
 #                              verbose = T,
 #                              seed = 111,
+#                              use_docker = FALSE)
+#
+# result9 <- simulate_datasets(method = NULL,
+#                              parameters = estimate_output,
+#                              seed = 10,
+#                              return_format = "Seurat",
+#                              n = 3,
+#                              verbose = T,
 #                              use_docker = FALSE,
-#                              other_prior = list(n = 5))
+#                              other_prior = list(batchCells = c(1000,1000),
+#                                                 group.prob = c(0.5, 0.5),
+#                                                 nGenes = 5000))
