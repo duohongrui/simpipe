@@ -18,7 +18,7 @@ method_execute_function_simulate <- function(
   }
 
   # Change parameters except for "n"
-  if(!is.null(other_prior) & is.null(other_prior[["n"]])){
+  if(!is.null(other_prior)){
     parameters <- simutils::set_parameters(parameters = parameters,
                                            other_prior = other_prior,
                                            method = method)

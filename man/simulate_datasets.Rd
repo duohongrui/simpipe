@@ -8,6 +8,7 @@ simulate_datasets(
   method = NULL,
   parameters = NULL,
   other_prior = list(),
+  n = 1,
   seed = simutils::random_seed(),
   return_format = "SingleCellExperiment",
   verbose = TRUE,
@@ -28,6 +29,9 @@ extra parameters to execute the estimation step, so you must input them. In
 simulation step, the number of cells, genes, groups, batches, the percent of
 DEGs and other variables are usually customed, so before simulating a dataset
 you must point it out.}
+
+\item{n}{The time(s) that users want to perform the simulation step with every
+method.}
 
 \item{seed}{A random seed. An integer or a vector of integers. If you want to
 simulate twice or more times by every method you have chosen, it should be a

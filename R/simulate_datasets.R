@@ -16,6 +16,8 @@
 #' simulation step, the number of cells, genes, groups, batches, the percent of
 #' DEGs and other variables are usually customed, so before simulating a dataset
 #' you must point it out.
+#' @param n The time(s) that users want to perform the simulation step with every
+#' method.
 #' @param seed A random seed. An integer or a vector of integers. If you want to
 #' simulate twice or more times by every method you have chosen, it should be a
 #' vector. If you do not input this parameter, the default value(s) will be used.
@@ -36,6 +38,7 @@ simulate_datasets <- function(
   method = NULL,
   parameters = NULL,
   other_prior = list(),
+  n = 1,
   seed = simutils::random_seed(),
   return_format = "SingleCellExperiment",
   verbose = TRUE,
@@ -54,49 +57,42 @@ simulate_datasets <- function(
 
   ## All methods
   all_methods <- simmethods::get_method()
-
   ## If method is NULL
   if(is.null(method) & !is.null(parameters)){
     method <- stringr::str_split(names(parameters), pattern = "_", simplify = T)[, 2]
   }
-
   ## If method is not NULL
   if(!is.null(method) & is.null(parameters)){
     ### If method is all
     if(method[1] == "all"){
       method <- names(all_methods)
     }
-    ### Users set "n" or not
-    if(is.null(other_prior[["n"]])){
-      cat("You do not set 'n' as the time(s) that every method will be executed, and it will be 1 \n")
-      other_prior[["n"]] <- 1
-    }
-    times <- other_prior[["n"]]
-    execute_time <- length(method)*times
-    ### Users set seed or not
-    if(length(seed) != execute_time){
-      cat("The length of seeds is not identical to the time(s) that every method will be executed \n")
-      seed <- seq_len(execute_time)
-      seed_chara <- paste(as.character(seed), collapse = " ")
-      cat(paste0("The seed will be set as: ", seed_chara, "\n"))
-    }
-    method <- rep(method, each = times)
   }
   ## Assert that method names are right
   assertthat::assert_that(all(method %in% names(all_methods)))
+  ### Method
+  every_exec_method <- rep(method, each = n)
+  ### Users set seed or not
+  if(length(seed) != n){
+    cat("The length of seeds is not identical to the time(s) that every method will be executed \n")
+    seed <- rep(seq_len(method), n)
+    seed_chara <- paste(as.character(unique(seed)), collapse = " ")
+    cat(paste0("The seed will be set as: ", seed_chara, " when performing every method\n"))
+  }
+
+  # Prepare parameters----------------------------------------------------------
+  parameters <- rep(parameters, each = n)
 
   # Run methods with each estimation and each method----------------------------
   result <- purrr::map(
-    .x = seq_len(length(method)),
+    .x = seq_len(length(every_exec_method)),
     .f = function(id) {
       # Users have performed the estimation step
       if(!is.null(parameters)){
         parameters <- parameters[[names(parameters)[id]]][["estimate_result"]]
       }
-      # Users have not performed the estimation step
-      if(!is.null(other_prior[["n"]])){
-        seed <- seed[id]
-      }
+      # Seed
+      seed <- seed[id]
       if(use_docker){
         method_execute_container_simulate(
         parameters = parameters,
@@ -119,9 +115,9 @@ simulate_datasets <- function(
   )
   # Prepare list names----------------------------------------------------------
   if(is.null(parameters)){
-    list_names <- paste0(method, "_", rep(seq_len(times), length(unique(method))))
+    list_names <- paste0(every_exec_method, "_", rep(seq_len(n), length(method)))
   }else{
-    list_names <- names(parameters)
+    list_names <- paste0(names(parameters), "_", rep(seq_len(n), length(method)))
   }
   result <- stats::setNames(result, list_names)
   return(result)
@@ -156,11 +152,11 @@ simulate_datasets <- function(
 #                             use_docker = TRUE)
 #
 # result5 <- simulate_datasets(method = "splat",
-#                             parameters = NULL,
-#                             seed = 10,
-#                             return_format = "Seurat",
-#                             verbose = T,
-#                             use_docker = TRUE)
+#                              parameters = NULL,
+#                              seed = 10,
+#                              return_format = "Seurat",
+#                              verbose = T,
+#                              use_docker = TRUE)
 #
 # result6 <- simulate_datasets(method = NULL,
 #                              parameters = estimate_output,
@@ -187,4 +183,4 @@ simulate_datasets <- function(
 #                              verbose = T,
 #                              seed = 111,
 #                              use_docker = FALSE,
-#                              other_prior = list(n = 10))
+#                              other_prior = list(n = 5))
