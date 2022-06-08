@@ -88,6 +88,9 @@ simulate_datasets <- function(
   result <- purrr::map(
     .x = seq_len(length(every_exec_method)),
     .f = function(id) {
+      if(verbose){
+        cat(paste0("Simulating dataset ", id, "\n"))
+      }
       # Users have performed the estimation step
       if(!is.null(parameters)){
         parameters <- parameters[[id]][["estimate_result"]]
@@ -132,26 +135,26 @@ simulate_datasets <- function(
 #                             use_docker = TRUE)
 #
 # result2 <- simulate_datasets(method = NULL,
-#                             parameters = estimate_output,
-#                             seed = 10,
-#                             return_format = "SingleCellExperiment",
-#                             verbose = T,
-#                             use_docker = TRUE)
+#                              parameters = estimate_output,
+#                              seed = 10,
+#                              return_format = "SingleCellExperiment",
+#                              verbose = T,
+#                              use_docker = TRUE)
 #
 # result3 <- simulate_datasets(method = NULL,
-#                             parameters = estimate_output,
-#                             seed = 10,
-#                             return_format = "list",
-#                             verbose = T,
-#                             use_docker = TRUE)
+#                              parameters = estimate_output,
+#                              seed = 10,
+#                              return_format = "list",
+#                              verbose = T,
+#                              use_docker = TRUE)
 #
 # result4 <- simulate_datasets(method = NULL,
-#                             parameters = estimate_output,
-#                             seed = 10,
-#                             n = 3,
-#                             return_format = "Seurat",
-#                             verbose = T,
-#                             use_docker = TRUE)
+#                              parameters = estimate_output,
+#                              seed = 10,
+#                              n = 3,
+#                              return_format = "Seurat",
+#                              verbose = T,
+#                              use_docker = TRUE)
 #
 # result5 <- simulate_datasets(method = "splat",
 #                              parameters = NULL,
@@ -173,7 +176,7 @@ simulate_datasets <- function(
 # result7 <- simulate_datasets(method = NULL,
 #                              parameters = estimate_output,
 #                              seed = 10,
-#                              return_format = "Seurat",
+#                              return_format = "SingleCellExperiment",
 #                              verbose = T,
 #                              use_docker = TRUE,
 #                              other_prior = list(batchCells = c(1000,1000),

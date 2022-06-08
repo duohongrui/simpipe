@@ -95,4 +95,8 @@ estimate_parameters <- function(
 #                                        seed = 10,
 #                                        verbose = TRUE,
 #                                        use_docker = TRUE)
-
+# estimate_output <- estimate_parameters(ref_data = ref_data,
+#                                        method = "splat",
+#                                        seed = 10,
+#                                        verbose = TRUE,
+#                                        use_docker = FALSE)
