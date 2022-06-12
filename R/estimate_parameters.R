@@ -100,7 +100,7 @@ estimate_parameters <- function(
 #                                        method = "SCRIP",
 #                                        seed = 10,
 #                                        verbose = TRUE,
-#                                        use_docker = FALSE)
+#                                        use_docker = TRUE)
 # plates <- as.numeric(factor(colData(sce)$Mutation_Status))
 # estimate_output <- estimate_parameters(ref_data = ref_data,
 #                                        method = "SplatPop",

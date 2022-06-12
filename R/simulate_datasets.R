@@ -152,6 +152,8 @@ simulate_datasets <- function(
 # result <- simulate_datasets(method = NULL,
 #                             parameters = estimate_output,
 #                             seed = 10,
+#                             ref_data = ref_data,
+#                             other_prior = list(mode = "GP-trendedBCV"),
 #                             return_format = "h5ad",
 #                             verbose = T,
 #                             use_docker = TRUE)
@@ -173,8 +175,10 @@ simulate_datasets <- function(
 # result4 <- simulate_datasets(method = NULL,
 #                              parameters = estimate_output,
 #                              seed = 10,
+#                              ref_data = ref_data,
 #                              return_format = "Seurat",
 #                              verbose = T,
+#                              other_prior = list(mode = "GP-trendedBCV"),
 #                              use_docker = TRUE)
 #
 # result5 <- simulate_datasets(method = "Splat",
@@ -199,8 +203,8 @@ simulate_datasets <- function(
 #                              seed = 10,
 #                              return_format = "SingleCellExperiment",
 #                              verbose = T,
-#                              use_docker = FALSE,
-#                              other_prior = list(nGenes = 5000))
+#                              use_docker = TRUE,
+#                              other_prior = NULL)
 #
 # result8 <- simulate_datasets(method = "SplatPop",
 #                              parameters = NULL,
