@@ -6,6 +6,7 @@
 method_execute_container_simulate <- function(
   parameters,
   method,
+  ref_data,
   other_prior,
   return_format,
   seed,
@@ -20,8 +21,9 @@ method_execute_container_simulate <- function(
 
   # Process datasets------------------------------------------------------------
   ## 1. Convert parameters into .rds and save to input path
-  # simutils::write_h5files(data = ref_data, file_path = temp_input_path)
-  saveRDS(parameters, file = temp_input_path)
+  input_data <- list(parameters = parameters,
+                     ref_data = ref_data)
+  saveRDS(input_data, file = temp_input_path)
 
   # Prepare the input parameters-----------------------------------------------
   ## 1. docker image working directory

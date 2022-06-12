@@ -1,6 +1,7 @@
 method_execute_function_simulate <- function(
   method,
   parameters,
+  ref_data,
   other_prior,
   return_format,
   seed,
@@ -25,6 +26,7 @@ method_execute_function_simulate <- function(
   }
   # Match arguments existing in the method function
   arguments <- dplyr::lst(parameters,
+                          ref_data,
                           other_prior,
                           return_format,
                           verbose,

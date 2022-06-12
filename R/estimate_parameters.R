@@ -81,22 +81,31 @@ estimate_parameters <- function(
 
 
 
-# a <- matrix(rpois(n = 10^6, lambda = 0.5), nrow = 1000)
+# a <- matrix(rnbinom(n = 10^6, size = 100, mu = 4), nrow = 1000)
 # colnames(a) <- paste0("cell_", 1:ncol(a))
 # rownames(a) <- paste0("gene_", 1:nrow(a))
 #
-# b <- matrix(rpois(n = 10^6, lambda = 0.5), nrow = 1000)
+# b <- matrix(rpois(n = 10^6, lambda = 1), nrow = 1000)
 # colnames(b) <- paste0("cell_", 1:ncol(b))
 # rownames(b) <- paste0("gene_", 1:nrow(b))
 #
 # ref_data <- list(a = a, b = b)
+#
+# sce <- readRDS("C:/Users/duoho/Desktop/sce.rds")
+# a <- counts(sce)
+# b <- counts(sce)
+#
+#
 # estimate_output <- estimate_parameters(ref_data = ref_data,
-#                                        method = "splat",
+#                                        method = "Splat",
 #                                        seed = 10,
 #                                        verbose = TRUE,
 #                                        use_docker = TRUE)
+# plates <- as.numeric(factor(colData(sce)$Mutation_Status))
 # estimate_output <- estimate_parameters(ref_data = ref_data,
-#                                        method = "splat",
-#                                        seed = 10,
+#                                        method = "SplatPop",
+#                                        seed = 111,
+#                                        #other_prior = list(plates = plates),
 #                                        verbose = TRUE,
-#                                        use_docker = FALSE)
+#                                        use_docker = TRUE)
+# m <- splatter::simpleEstimate(a)
