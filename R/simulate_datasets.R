@@ -40,7 +40,7 @@ simulate_datasets <- function(
   method = NULL,
   parameters = NULL,
   ref_data = NULL,
-  other_prior = list(),
+  other_prior = NULL,
   n = 1,
   seed = simutils::random_seed(),
   return_format = "SingleCellExperiment",
@@ -211,6 +211,7 @@ simulate_datasets <- function(
 #                              use_docker = FALSE)
 #
 # result9 <- simulate_datasets(method = NULL,
+#                              ref_data = ref_data,
 #                              parameters = estimate_output,
 #                              seed = 10,
 #                              return_format = "Seurat",
@@ -219,4 +220,5 @@ simulate_datasets <- function(
 #                              use_docker = FALSE,
 #                              other_prior = list(batchCells = c(1000,1000),
 #                                                 group.prob = c(0.5, 0.5),
-#                                                 nGenes = 5000))
+#                                                 nGenes = 5000,
+#                                                 mode = "GP-trendedBCV"))

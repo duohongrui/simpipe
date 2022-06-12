@@ -8,7 +8,7 @@ simulate_datasets(
   method = NULL,
   parameters = NULL,
   ref_data = NULL,
-  other_prior = list(),
+  other_prior = NULL,
   n = 1,
   seed = simutils::random_seed(),
   return_format = "SingleCellExperiment",
