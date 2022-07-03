@@ -18,9 +18,9 @@
 #' environment.
 #'
 #' @return A list of estimated parameters and detection results
+#' @import simutils
 #' @importFrom tidyr crossing
 #' @importFrom simmethods get_method
-#' @importFrom simutils write_h5files random_seed
 #' @importFrom assertthat assert_that
 #' @importFrom purrr map
 #' @importFrom stats setNames
@@ -36,7 +36,7 @@ estimate_parameters <- function(
 ){
   # Check-----------------------------------------------------------------------
   if(is.matrix(ref_data)){
-    ref_data <- list(ref_data = ref_data)
+    ref_data <- list(refdata = ref_data)
   }
   assertthat::assert_that(is.list(ref_data))
 
@@ -55,18 +55,21 @@ estimate_parameters <- function(
     .x = seq_len(nrow(design)),
     .f = function(er) {
       seed <- ifelse(is.null(seed), random_seed(), seed)
+      other_prior_exec <- simutils::check_prior_info(method = design$method_id[er],
+                                                     step = "estimation",
+                                                     other_prior = other_prior)
       if(use_docker){
         method_execute_container_estimate(
           ref_data = ref_data[[design$dataset_id[er]]],
           method = design$method_id[er],
-          other_prior = other_prior,
+          other_prior = other_prior_exec,
           seed = seed,
           verbose = verbose)
       }else{
         method_execute_function_estimate(
           ref_data = ref_data[[design$dataset_id[er]]],
           method = design$method_id[er],
-          other_prior = other_prior,
+          other_prior = other_prior_exec,
           seed = seed,
           verbose = verbose
         )
@@ -82,30 +85,34 @@ estimate_parameters <- function(
 
 
 # a <- matrix(rnbinom(n = 10^6, size = 100, mu = 4), nrow = 1000)
-# colnames(a) <- paste0("cell_", 1:ncol(a))
-# rownames(a) <- paste0("gene_", 1:nrow(a))
+# colnames(a) <- paste0("cell", 1:ncol(a))
+# rownames(a) <- paste0("gene", 1:nrow(a))
 #
 # b <- matrix(rpois(n = 10^6, lambda = 1), nrow = 1000)
-# colnames(b) <- paste0("cell_", 1:ncol(b))
-# rownames(b) <- paste0("gene_", 1:nrow(b))
+# colnames(b) <- paste0("cell", 1:ncol(b))
+# rownames(b) <- paste0("gene", 1:nrow(b))
 #
 # ref_data <- list(a = a, b = b)
 #
 # sce <- readRDS("C:/Users/duoho/Desktop/sce.rds")
-# a <- counts(sce)
-# b <- counts(sce)
+# a <- SingleCellExperiment::counts(sce)
+# rownames(a) <- paste0("Gene", 1:nrow(a))
+# b <- SingleCellExperiment::counts(sce)
+# rownames(b) <- paste0("Gene", 1:nrow(b))
 #
+# a <- powsimR::CELseq2_Gene_UMI_Counts
+# b <- powsimR::CELseq2_Gene_UMI_Counts
 #
 # estimate_output <- estimate_parameters(ref_data = ref_data,
-#                                        method = "SCRIP",
+#                                        method = "Splat",
 #                                        seed = 10,
 #                                        verbose = TRUE,
 #                                        use_docker = TRUE)
 # plates <- as.numeric(factor(colData(sce)$Mutation_Status))
 # estimate_output <- estimate_parameters(ref_data = ref_data,
-#                                        method = "SplatPop",
+#                                        method = "scDD",
 #                                        seed = 111,
-#                                        #other_prior = list(plates = plates),
+#                                        other_prior = NULL,
 #                                        verbose = TRUE,
-#                                        use_docker = TRUE)
+#                                        use_docker = FALSE)
 # m <- splatter::simpleEstimate(a)

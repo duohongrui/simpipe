@@ -218,13 +218,10 @@ simulate_datasets <- function(
 #                              ref_data = ref_data,
 #                              parameters = estimate_output,
 #                              seed = 10,
-#                              return_format = "Seurat",
-#                              n = 3,
+#                              return_format = "list",
+#                              n = 2,
 #                              verbose = T,
 #                              use_docker = FALSE,
-#                              other_prior = list(batchCells = c(1000,1000),
-#                                                 group.prob = c(0.5, 0.5),
-#                                                 nGenes = 5000,
-#                                                 mode = "GP-trendedBCV"))
+#                              other_prior = NULL)
 
 
