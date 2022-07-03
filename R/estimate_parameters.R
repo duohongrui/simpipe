@@ -57,7 +57,7 @@ estimate_parameters <- function(
       seed <- ifelse(is.null(seed), random_seed(), seed)
       other_prior_exec <- simutils::check_prior_info(method = design$method_id[er],
                                                      step = "estimation",
-                                                     other_prior = other_prior)
+                                                     other_prior = other_prior[[design$dataset_id[er]]])
       if(use_docker){
         method_execute_container_estimate(
           ref_data = ref_data[[design$dataset_id[er]]],
@@ -110,9 +110,10 @@ estimate_parameters <- function(
 #                                        use_docker = TRUE)
 # plates <- as.numeric(factor(colData(sce)$Mutation_Status))
 # estimate_output <- estimate_parameters(ref_data = ref_data,
-#                                        method = "scDD",
-#                                        seed = 111,
-#                                        other_prior = NULL,
+#                                        method = "SPARSim",
+#                                        seed = 1111,
+#                                        other_prior = list(a = list("group.condition" = sample(c(1,2), 200, replace = T)),
+#                                                           b = list("group.condition" = sample(c(1,2), 200, replace = T))),
 #                                        verbose = TRUE,
 #                                        use_docker = FALSE)
 # m <- splatter::simpleEstimate(a)
