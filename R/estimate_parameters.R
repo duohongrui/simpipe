@@ -110,10 +110,10 @@ estimate_parameters <- function(
 #                                        use_docker = TRUE)
 # plates <- as.numeric(factor(colData(sce)$Mutation_Status))
 # estimate_output <- estimate_parameters(ref_data = ref_data,
-#                                        method = "SPARSim",
-#                                        seed = 1111,
-#                                        other_prior = list(a = list("group.condition" = sample(c(1,2), 200, replace = T)),
-#                                                           b = list("group.condition" = sample(c(1,2), 200, replace = T))),
+#                                        method = "zingeR",
+#                                        seed = 110,
+#                                        other_prior = list(a = list("group.condition" = sample(c(1,2), 320, replace = T)),
+#                                                           b = list("group.condition" = sample(c(1,2), 320, replace = T))),
 #                                        verbose = TRUE,
 #                                        use_docker = FALSE)
 # m <- splatter::simpleEstimate(a)

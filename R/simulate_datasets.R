@@ -72,7 +72,9 @@ simulate_datasets <- function(
   all_methods <- simmethods::get_method()
   ## If method is NULL
   if(is.null(method) & !is.null(parameters)){
-    method <- stringr::str_split(names(parameters), pattern = "_", simplify = T)[, 2]
+    method <- stringr::str_split(names(parameters),
+                                 pattern = "_",
+                                 simplify = T)[, 2]
   }
   ## If method is not NULL
   if(!is.null(method) & is.null(parameters)){
@@ -99,6 +101,12 @@ simulate_datasets <- function(
   if(!is.null(ref_data) & is.list(ref_data)){
     ref_data <- rep(ref_data, each = n)
   }
+  ## Data name
+  if(is.null(method) & !is.null(parameters)){
+    data_name <- stringr::str_split(names(parameters),
+                                    pattern = "_",
+                                    simplify = T)[, 1]
+  }
   # Run methods with each estimation and each method----------------------------
   result <- purrr::map(
     .x = seq_len(length(every_exec_method)),
@@ -109,6 +117,16 @@ simulate_datasets <- function(
       # Users have performed the estimation step
       if(!is.null(parameters)){
         parameters <- parameters[[id]][["estimate_result"]]
+      }
+      if(!is.null(other_prior)){
+        if(all(data_name %in% names(other_prior))){
+          other_prior_exec <- other_prior[[every_exec_method[id]]]
+        }else{
+          other_prior_exec <- other_prior
+        }
+        other_prior_exec <- simutils::check_prior_info(method = every_exec_method[id],
+                                                       step = "simulation",
+                                                       other_prior = other_prior_exec)
       }
       if(!is.null(ref_data)){
         ref_data <- ref_data[[id]]
@@ -122,7 +140,7 @@ simulate_datasets <- function(
         parameters = parameters,
         method = every_exec_method[id],
         ref_data = ref_data,
-        other_prior = other_prior,
+        other_prior = other_prior_exec,
         return_format = return_format,
         seed = seed,
         verbose = verbose)
@@ -131,7 +149,7 @@ simulate_datasets <- function(
           parameters = parameters,
           method = every_exec_method[id],
           ref_data = ref_data,
-          other_prior = other_prior,
+          other_prior = other_prior_exec,
           return_format = return_format,
           seed = seed,
           verbose = verbose
@@ -222,6 +240,6 @@ simulate_datasets <- function(
 #                              n = 2,
 #                              verbose = T,
 #                              use_docker = FALSE,
-#                              other_prior = NULL)
-
+#                              other_prior = list(a = list("group.condition" = sample(c(1,2), 320, replace = T)),
+#                                                 b = list("group.condition" = sample(c(1,2), 320, replace = T))))
 
