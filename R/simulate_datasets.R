@@ -75,6 +75,9 @@ simulate_datasets <- function(
     method <- stringr::str_split(names(parameters),
                                  pattern = "_",
                                  simplify = T)[, 2]
+    data_name <- stringr::str_split(names(parameters),
+                                    pattern = "_",
+                                    simplify = T)[, 1]
   }
   ## If method is not NULL
   if(!is.null(method) & is.null(parameters)){
@@ -87,6 +90,7 @@ simulate_datasets <- function(
   assertthat::assert_that(all(method %in% names(all_methods)))
   ### Method
   every_exec_method <- rep(method, each = n)
+  every_data_name <- rep(data_name, each = n)
   ### Users set seed or not
   if(length(seed) != n){
     cat("The length of seeds is not identical to the time(s) that every method will be executed \n")
@@ -101,12 +105,6 @@ simulate_datasets <- function(
   if(!is.null(ref_data) & is.list(ref_data)){
     ref_data <- rep(ref_data, each = n)
   }
-  ## Data name
-  if(is.null(method) & !is.null(parameters)){
-    data_name <- stringr::str_split(names(parameters),
-                                    pattern = "_",
-                                    simplify = T)[, 1]
-  }
   # Run methods with each estimation and each method----------------------------
   result <- purrr::map(
     .x = seq_len(length(every_exec_method)),
@@ -120,7 +118,7 @@ simulate_datasets <- function(
       }
       if(!is.null(other_prior)){
         if(all(data_name %in% names(other_prior))){
-          other_prior_exec <- other_prior[[every_exec_method[id]]]
+          other_prior_exec <- other_prior[[every_data_name[id]]]
         }else{
           other_prior_exec <- other_prior
         }
@@ -233,7 +231,7 @@ simulate_datasets <- function(
 #                              use_docker = FALSE)
 #
 # result9 <- simulate_datasets(method = NULL,
-#                              ref_data = ref_data,
+#                              ref_data = NULL,
 #                              parameters = estimate_output,
 #                              seed = 10,
 #                              return_format = "list",

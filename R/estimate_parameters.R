@@ -84,36 +84,36 @@ estimate_parameters <- function(
 
 
 
-# a <- matrix(rnbinom(n = 10^6, size = 100, mu = 4), nrow = 1000)
-# colnames(a) <- paste0("cell", 1:ncol(a))
-# rownames(a) <- paste0("gene", 1:nrow(a))
-#
-# b <- matrix(rpois(n = 10^6, lambda = 1), nrow = 1000)
-# colnames(b) <- paste0("cell", 1:ncol(b))
-# rownames(b) <- paste0("gene", 1:nrow(b))
-#
-# ref_data <- list(a = a, b = b)
-#
-# sce <- readRDS("C:/Users/duoho/Desktop/sce.rds")
-# a <- SingleCellExperiment::counts(sce)
-# rownames(a) <- paste0("Gene", 1:nrow(a))
-# b <- SingleCellExperiment::counts(sce)
-# rownames(b) <- paste0("Gene", 1:nrow(b))
-#
-# a <- powsimR::CELseq2_Gene_UMI_Counts
-# b <- powsimR::CELseq2_Gene_UMI_Counts
-#
-# estimate_output <- estimate_parameters(ref_data = ref_data,
-#                                        method = "Splat",
-#                                        seed = 10,
-#                                        verbose = TRUE,
-#                                        use_docker = TRUE)
-# plates <- as.numeric(factor(colData(sce)$Mutation_Status))
-# estimate_output <- estimate_parameters(ref_data = ref_data,
-#                                        method = "zingeR",
-#                                        seed = 110,
-#                                        other_prior = list(a = list("group.condition" = sample(c(1,2), 320, replace = T)),
-#                                                           b = list("group.condition" = sample(c(1,2), 320, replace = T))),
-#                                        verbose = TRUE,
-#                                        use_docker = FALSE)
-# m <- splatter::simpleEstimate(a)
+a <- matrix(rnbinom(n = 10^6, size = 100, mu = 4), nrow = 1000)
+colnames(a) <- paste0("cell", 1:ncol(a))
+rownames(a) <- paste0("gene", 1:nrow(a))
+
+b <- matrix(rpois(n = 10^6, lambda = 1), nrow = 1000)
+colnames(b) <- paste0("cell", 1:ncol(b))
+rownames(b) <- paste0("gene", 1:nrow(b))
+
+ref_data <- list(a = a, b = b)
+
+sce <- readRDS("C:/Users/duoho/Desktop/sce.rds")
+a <- SingleCellExperiment::counts(sce)
+rownames(a) <- paste0("Gene", 1:nrow(a))
+b <- SingleCellExperiment::counts(sce)
+rownames(b) <- paste0("Gene", 1:nrow(b))
+
+a <- powsimR::CELseq2_Gene_UMI_Counts
+b <- powsimR::CELseq2_Gene_UMI_Counts
+
+estimate_output <- estimate_parameters(ref_data = ref_data,
+                                       method = "Splat",
+                                       seed = 10,
+                                       verbose = TRUE,
+                                       use_docker = TRUE)
+plates <- as.numeric(factor(colData(sce)$Mutation_Status))
+estimate_output <- estimate_parameters(ref_data = ref_data,
+                                       method = "zingeR",
+                                       seed = 110,
+                                       other_prior = list(a = list("group.condition" = sample(c(1,2), 320, replace = T)),
+                                                          b = list("group.condition" = sample(c(1,2), 320, replace = T))),
+                                       verbose = TRUE,
+                                       use_docker = FALSE)
+m <- splatter::simpleEstimate(a)
