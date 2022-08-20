@@ -14,7 +14,7 @@ Description: The series steps of estimating parameters from real data, simulatin
     scRNA-seq datasets and evaluating the simulated data with real data are packaged
     in this project. The prevalent methods of simulating scRNA-seq datasets are 
     involved in this project and we will still add new important methods in the future.
-License: GPL-3
+License: GPL (>= 3)
 Depends: R (>= 4.0)
 Imports: tidyr,
          purrr,
