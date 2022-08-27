@@ -1,5 +1,5 @@
 
-<img src="man/figures/simpipe_logo.png" align="right" width = "158px" height="182px"/>
+<img src="man/figures/simpipe_logo.png" align="right" width = "158px" height="183px"/>
 
 # Simpipe provides the standard pipeline of estimating parameters from read data, simulating and evaluating simulated data.
 
