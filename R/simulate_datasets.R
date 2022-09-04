@@ -234,10 +234,11 @@ simulate_datasets <- function(
 #                              ref_data = NULL,
 #                              parameters = estimate_output,
 #                              seed = 10,
-#                              return_format = "list",
-#                              n = 2,
+#                              return_format = "h5ad",
+#                              n = 1,
 #                              verbose = T,
 #                              use_docker = FALSE,
-#                              other_prior = list(a = list("group.condition" = sample(c(1,2), 320, replace = T)),
-#                                                 b = list("group.condition" = sample(c(1,2), 320, replace = T))))
+#                              other_prior = list("batchCells" = c(100, 100),
+#                                                 "de.prob" = 0.2,
+#                                                 "prob.group" = c(0.4, 0.6)))
 
