@@ -78,6 +78,16 @@ simulate_datasets <- function(
     data_name <- stringr::str_split(names(parameters),
                                     pattern = "_",
                                     simplify = T)[, 1]
+  }else{
+    ## For scDesign method
+    if(is.list(ref_data)){
+      data_length <- length(ref_data)
+    }else if(is.matrix(ref_data) | is.data.frame(ref_data)){
+      data_length <- 1
+    }else{
+      stop("reference data can only be a list or a matrix or a data.frame")
+    }
+    data_name <- paste0("refdata", 1:data_length)
   }
   ## If method is not NULL
   if(!is.null(method) & is.null(parameters)){
