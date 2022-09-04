@@ -79,7 +79,7 @@ simulate_datasets <- function(
                                     pattern = "_",
                                     simplify = T)[, 1]
   }else{
-    ## For scDesign method
+    ## For scDesign and SPsimSeq method
     if(is.list(ref_data)){
       data_length <- length(ref_data)
     }else if(is.matrix(ref_data) | is.data.frame(ref_data)){
