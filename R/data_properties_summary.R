@@ -9,6 +9,15 @@
 }
 
 
+#' Summary Data Properties
+#'
+#' @param ref_data_cell_properties Cell properties of reference data
+#' @param sim_data_cell_properties Cell properties of simulated data
+#' @param ref_data_gene_properties Gene properties of reference data
+#' @param sim_data_gene_properties Gene properties of simulated data
+#'
+#' @return A list
+#' @export
 data_properties_summary <- function(
   ref_data_cell_properties,
   sim_data_cell_properties,
@@ -25,6 +34,8 @@ data_properties_summary <- function(
   ###------------------------------------------------------------------------###
 
   ## MAD
+  message("Cell properties...")
+  message("1-MAD")
   MAD_library <- median(abs(ref_data_cell_properties[[1]] - sim_data_cell_properties[[1]]))
   MAD_cellzero <- median(abs(ref_data_cell_properties[[2]] - sim_data_cell_properties[[2]]))
   MAD_cellcor <- median(abs(ref_data_cell_properties[[3]] - sim_data_cell_properties[[3]]))
@@ -37,6 +48,7 @@ data_properties_summary <- function(
     message("Installing provenance package...")
     install.packages("provenance")
   }
+  message("2-KS")
   KS_library <- provenance::KS.diss(ref_data_cell_properties[[1]], sim_data_cell_properties[[1]])
   KS_cellzero <- provenance::KS.diss(ref_data_cell_properties[[2]], sim_data_cell_properties[[2]])
   KS_cellcor <- provenance::KS.diss(ref_data_cell_properties[[3]], sim_data_cell_properties[[3]])
@@ -44,6 +56,7 @@ data_properties_summary <- function(
   KS_elibrary <- provenance::KS.diss(ref_data_cell_properties[[5]], sim_data_cell_properties[[5]])
 
   ## Correlation Distance
+  message("3-Correlation")
   cor_library <- cor(ref_data_cell_properties[[1]], sim_data_cell_properties[[1]], method = "pearson")
   cor_cellzero <- cor(ref_data_cell_properties[[2]], sim_data_cell_properties[[2]], method = "pearson")
   cor_cellcor <- cor(ref_data_cell_properties[[3]], sim_data_cell_properties[[3]], method = "pearson")
@@ -55,6 +68,7 @@ data_properties_summary <- function(
     message("Installing MLmetrics package...")
     install.packages("MLmetrics")
   }
+  message("4-MAE")
   MAE_library <- MLmetrics::MAE(sim_data_cell_properties[[1]], ref_data_cell_properties[[1]])
   MAE_cellzero <- MLmetrics::MAE(sim_data_cell_properties[[2]], ref_data_cell_properties[[2]])
   MAE_cellcor <- MLmetrics::MAE(sim_data_cell_properties[[3]], ref_data_cell_properties[[3]])
@@ -63,6 +77,7 @@ data_properties_summary <- function(
   MAE_outcell <- MLmetrics::MAE(sim_data_cell_properties[[6]], ref_data_cell_properties[[6]])
 
   ## RMSE
+  message("5-RMSE")
   RMSE_library <- MLmetrics::RMSE(sim_data_cell_properties[[1]], ref_data_cell_properties[[1]])
   RMSE_cellzero <- MLmetrics::RMSE(sim_data_cell_properties[[2]], ref_data_cell_properties[[2]])
   RMSE_cellcor <- MLmetrics::RMSE(sim_data_cell_properties[[3]], ref_data_cell_properties[[3]])
@@ -79,6 +94,7 @@ data_properties_summary <- function(
     message("Installing fasano.franceschini.test package...")
     install.packages("fasano.franceschini.test")
   }
+  message("6-library size vs zero fraction of cells")
   libraryvscellzero_ref <- matrix(c(log10(ref_data_cell_properties$library_size)+1,
                                     ref_data_cell_properties$zero_fraction_cell), ncol = 2)
   libraryvscellzero_sim <- matrix(c(log10(sim_data_cell_properties$library_size)+1,
@@ -104,6 +120,8 @@ data_properties_summary <- function(
   sim_data_gene_properties$gene_cor <- sim_data_gene_properties$gene_cor[1:genecor_length]
 
   ## MAD
+  message("Gene properties...")
+  message("1-MAD")
   MAD_mean <- median(abs(ref_data_gene_properties[[1]] - sim_data_gene_properties[[1]]))
   MAD_sd <- median(abs(ref_data_gene_properties[[2]] - sim_data_gene_properties[[2]]))
   MAD_cv <- median(abs(ref_data_gene_properties[[3]] - sim_data_gene_properties[[3]]))
@@ -117,6 +135,7 @@ data_properties_summary <- function(
     message("Installing provenance package...")
     install.packages("provenance")
   }
+  message("2-KS")
   KS_mean <- provenance::KS.diss(ref_data_gene_properties[[1]], sim_data_gene_properties[[1]])
   KS_sd <- provenance::KS.diss(ref_data_gene_properties[[2]], sim_data_gene_properties[[2]])
   KS_cv <- provenance::KS.diss(ref_data_gene_properties[[3]], sim_data_gene_properties[[3]])
@@ -125,6 +144,7 @@ data_properties_summary <- function(
   KS_dispersion <- provenance::KS.diss(ref_data_gene_properties[[6]], sim_data_gene_properties[[6]])
 
   ## Correlation Distance
+  message("3-Correlation")
   cor_mean <- cor(ref_data_gene_properties[[1]], sim_data_gene_properties[[1]], method = "pearson")
   cor_sd <- cor(ref_data_gene_properties[[2]], sim_data_gene_properties[[2]], method = "pearson")
   cor_cv <- cor(ref_data_gene_properties[[3]], sim_data_gene_properties[[3]], method = "pearson")
@@ -137,6 +157,7 @@ data_properties_summary <- function(
     message("Installing MLmetrics package...")
     install.packages("MLmetrics")
   }
+  message("4-MAE")
   MAE_mean <- MLmetrics::MAE(sim_data_gene_properties[[1]], ref_data_gene_properties[[1]])
   MAE_sd <- MLmetrics::MAE(sim_data_gene_properties[[2]], ref_data_gene_properties[[2]])
   MAE_cv <- MLmetrics::MAE(sim_data_gene_properties[[3]], ref_data_gene_properties[[3]])
@@ -146,6 +167,7 @@ data_properties_summary <- function(
   MAE_outgene <- MLmetrics::MAE(sim_data_gene_properties[[7]], ref_data_gene_properties[[7]])
 
   ## RMSE
+  message("5-RMSE")
   RMSE_mean <- MLmetrics::RMSE(sim_data_gene_properties[[1]], ref_data_gene_properties[[1]])
   RMSE_sd <- MLmetrics::RMSE(sim_data_gene_properties[[2]], ref_data_gene_properties[[2]])
   RMSE_cv <- MLmetrics::RMSE(sim_data_gene_properties[[3]], ref_data_gene_properties[[3]])
@@ -156,6 +178,7 @@ data_properties_summary <- function(
 
   ## Bivariate
   ### mean vs sd
+  message("6-mean expression vs sd")
   meanvssd_ref <- matrix(c(ref_data_gene_properties$mean_expression,
                            ref_data_gene_properties$sd), ncol = 2)
   meanvssd_sim <- matrix(c(sim_data_gene_properties$mean_expression,
@@ -170,6 +193,7 @@ data_properties_summary <- function(
 
 
   ### mean vs zero
+  message("7-mean expression vs zero fraction of genes")
   meanvszero_ref <- matrix(c(ref_data_gene_properties$mean_expression,
                              ref_data_gene_properties$zero_fraction_gene), ncol = 2)
   meanvszero_sim <- matrix(c(sim_data_gene_properties$mean_expression,
@@ -184,6 +208,7 @@ data_properties_summary <- function(
 
 
   ### mean vs dispersion
+  message("8-mean expression vs dispersion")
   meanvsdispersion_ref <- matrix(c(ref_data_gene_properties$mean_expression,
                                    ref_data_gene_properties$dispersion), ncol = 2)
   meanvsdispersion_sim <- matrix(c(sim_data_gene_properties$mean_expression,
@@ -198,25 +223,79 @@ data_properties_summary <- function(
 
 
   return(list(MAD_library = MAD_library,
-              MAD_zero-fraction-cell = MAD_cellzero,
-              MAD_cell-correlation = MAD_cellcor,
+              `MAD_zerofraction of cells` = MAD_cellzero,
+              `MAD_cell correlation` = MAD_cellcor,
               MAD_TMM = MAD_TMM,
-              MAD_effective-library = MAD_elibrary,
-              MAD_cell-outlier = MAD_outcell,
+              `MAD_effective library` = MAD_elibrary,
+              `MAD_cell outlier` = MAD_outcell,
               KS_library = KS_library,
-              KS_zero-fraction-cell = KS_cellzero,
-              KS_cell-correlation = KS_cellcor,
+              `KS_zero fraction of cells` = KS_cellzero,
+              `KS_cell correlation` = KS_cellcor,
               KS_TMM = KS_TMM,
-              KS_effective-library = KS_elibrary))
+              `KS_effective library` = KS_elibrary,
+              cor_library = cor_library,
+              `cor_zero fraction of cells` = cor_cellzero,
+              `cor_cell correlation` = cor_cellcor,
+              cor_TMM = cor_TMM,
+              `cor_effective library` = cor_elibrary,
+              MAE_library = MAE_library,
+              `MAE_zero fraction of cells` = MAE_cellzero,
+              `MAE_cell correlation` = MAE_cellcor,
+              MAE_TMM = MAE_TMM,
+              `MAE_effective library` = MAE_elibrary,
+              `MAE_cell outlier` = MAE_outcell,
+              RMSE_library = RMSE_library,
+              `RMSE_zero fraction of cells` = RMSE_cellzero,
+              `RMSE_cell correlation` = RMSE_cellcor,
+              RMSE_TMM = RMSE_TMM,
+              `RMSE_effective library` = RMSE_elibrary,
+              `RMSE_cell outlier` = RMSE_outcell,
+              `library size vs zero fraction of cells` = libraryvscellzero,
+              `MAD_mean expression` = MAD_mean,
+              MAD_sd = MAD_sd,
+              MAD_cv = MAD_cv,
+              `MAD_gene correlation` = MAD_genecor,
+              `MAD_zero fraction of genes` = MAD_genezero,
+              MAD_dispersion = MAD_dispersion,
+              `MAD_gene outlier` = MAD_dispersion,
+              `KS_mean expression` = KS_mean,
+              KS_sd = KS_sd,
+              KS_cv = KS_cv,
+              `KS_gene correlation` = KS_genecor,
+              `KS_zero fraction of genes` = KS_genezero,
+              KS_dispersion = KS_dispersion,
+              `cor_mean expression` = cor_mean,
+              cor_sd = cor_sd,
+              cor_cv = cor_cv,
+              `cor_gene correlation` = cor_genecor,
+              `cor_zero fraction of genes` = cor_genezero,
+              cor_dispersion = cor_dispersion,
+              `MAE_mean expression` = MAE_mean,
+              MAE_sd = MAE_sd,
+              MAE_cv = MAE_cv,
+              `MAE_gene correlation` = MAE_genecor,
+              `MAE_zero fraction of genes` = MAE_genezero,
+              MAE_dispersion = MAE_dispersion,
+              `MAE_gene outlier` = MAE_dispersion,
+              `RMSE_mean expression` = RMSE_mean,
+              RMSE_sd = RMSE_sd,
+              RMSE_cv = RMSE_cv,
+              `RMSE_gene correlation` = RMSE_genecor,
+              `RMSE_zero fraction of genes` = RMSE_genezero,
+              RMSE_dispersion = RMSE_dispersion,
+              `RMSE_gene outlier` = RMSE_dispersion,
+              `mean expression vs sd` = meanvssd,
+              `mean expression vs zero fraction of genes` = meanvszero,
+              `mean expression vs dispersion` = meanvsdispersion))
 
 }
 
 
-data <- readRDS("/Users/duohongrui/Desktop/preprocessed_data/data1_GSE54006.rds")
-ref_data_cell_properties <- simutils::cell_properties(data$data, verbose = TRUE)
-ref_data_gene_properties <- simutils::gene_properties(data$data, verbose = TRUE)
-
-sim <- readRDS("/Volumes/Elements/06-personal information/Evaluation of Sim Tools/Evaluation/splatter_package_methods/simulation_data/dropsim_data1_GSE54006.rds")
-sim_data <- sim$sim_data$count_data
-sim_data_cell_properties <- simutils::cell_properties(sim_data, verbose = TRUE)
-sim_data_gene_properties <- simutils::gene_properties(sim_data, verbose = TRUE)
+# data <- readRDS("/Users/duohongrui/Desktop/preprocessed_data/data1_GSE54006.rds")
+# ref_data_cell_properties <- simutils::cell_properties(data$data, verbose = TRUE)
+# ref_data_gene_properties <- simutils::gene_properties(data$data, verbose = TRUE)
+#
+# sim <- readRDS("/Volumes/Elements/06-personal information/Evaluation of Sim Tools/Evaluation/splatter_package_methods/simulation_data/dropsim_data1_GSE54006.rds")
+# sim_data <- sim$sim_data$count_data
+# sim_data_cell_properties <- simutils::cell_properties(sim_data, verbose = TRUE)
+# sim_data_gene_properties <- simutils::gene_properties(sim_data, verbose = TRUE)
