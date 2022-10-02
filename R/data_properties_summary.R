@@ -223,7 +223,7 @@ data_properties_summary <- function(
 
 
   return(list(MAD_library = MAD_library,
-              `MAD_zerofraction of cells` = MAD_cellzero,
+              `MAD_zero fraction of cells` = MAD_cellzero,
               `MAD_cell correlation` = MAD_cellcor,
               MAD_TMM = MAD_TMM,
               `MAD_effective library` = MAD_elibrary,
