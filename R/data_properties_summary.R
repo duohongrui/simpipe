@@ -24,6 +24,26 @@ data_properties_summary <- function(
   ref_data_gene_properties,
   sim_data_gene_properties
 ){
+  ###------------------------------------------------------------------------###
+  ###                           Check
+  ###------------------------------------------------------------------------###
+  cell_properties <- names(ref_data_cell_properties)
+  for(i in cell_properties){
+    ref_length <- length(ref_data_cell_properties[[i]])
+    sim_length <- length(sim_data_cell_properties[[i]])
+    if(ref_length != sim_length){
+      stop(glue::glue("The length of property {i} is not equal in reference data properties and simulation data properties."))
+    }
+  }
+  gene_properties <- names(ref_data_gene_properties)
+  for(i in gene_properties){
+    ref_length <- length(ref_data_gene_properties[[i]])
+    sim_length <- length(sim_data_gene_properties[[i]])
+    if(ref_length != sim_length){
+      stop(glue::glue("The length of property {i} is not equal in reference data properties and simulation data properties."))
+    }
+  }
+
   ref_data_cell_properties <- lapply(ref_data_cell_properties, .transformation)
   sim_data_cell_properties <- lapply(sim_data_cell_properties, .transformation)
   ref_data_gene_properties <- lapply(ref_data_gene_properties, .transformation)
