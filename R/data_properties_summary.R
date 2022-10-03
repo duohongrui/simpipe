@@ -105,6 +105,14 @@ data_properties_summary <- function(
   RMSE_elibrary <- MLmetrics::RMSE(sim_data_cell_properties[[5]], ref_data_cell_properties[[5]])
   RMSE_outcell <- MLmetrics::RMSE(sim_data_cell_properties[[6]], ref_data_cell_properties[[6]])
 
+  ## KDE (univariate)
+  message("6-RMSE")
+  KDE_library <- ks::kde.test(sim_data_cell_properties[[1]], ref_data_cell_properties[[1]])$zstat
+  KDE_cellzero <- ks::kde.test(sim_data_cell_properties[[2]], ref_data_cell_properties[[2]])$zstat
+  KDE_cellcor <- ks::kde.test(sim_data_cell_properties[[3]], ref_data_cell_properties[[3]])$zstat
+  KDE_TMM <- ks::kde.test(sim_data_cell_properties[[4]], ref_data_cell_properties[[4]])$zstat
+  KDE_elibrary <- ks::kde.test(sim_data_cell_properties[[5]], ref_data_cell_properties[[5]])$zstat
+
   ## Bivariate
   if(!requireNamespace("RcppParallel")){
     message("Installing RcppParallel package...")
@@ -114,7 +122,7 @@ data_properties_summary <- function(
     message("Installing fasano.franceschini.test package...")
     install.packages("fasano.franceschini.test")
   }
-  message("6-library size vs zero fraction of cells")
+  message("7-library size vs zero fraction of cells")
   libraryvscellzero_ref <- matrix(c(log10(ref_data_cell_properties$library_size)+1,
                                     ref_data_cell_properties$zero_fraction_cell), ncol = 2)
   libraryvscellzero_sim <- matrix(c(log10(sim_data_cell_properties$library_size)+1,
@@ -125,6 +133,8 @@ data_properties_summary <- function(
     threads = RcppParallel::defaultNumThreads(),
     method = "o")
   libraryvscellzero <- mean(libraryvscellzero$estimate)
+
+  KDE_libraryvscellzero <- ks::kde.test(libraryvscellzero_ref, libraryvscellzero_sim)$zstat
 
   ###------------------------------------------------------------------------###
   ###                           Gene Level
@@ -196,9 +206,19 @@ data_properties_summary <- function(
   RMSE_dispersion <- MLmetrics::RMSE(sim_data_gene_properties[[6]], ref_data_gene_properties[[6]])
   RMSE_outgene <- MLmetrics::RMSE(sim_data_gene_properties[[7]], ref_data_gene_properties[[7]])
 
+  ## KDE (univariate)
+  message("6-KDE")
+  KDE_mean <- ks::kde.test(sim_data_gene_properties[[1]], ref_data_gene_properties[[1]])$zstat
+  KDE_sd <- ks::kde.test(sim_data_gene_properties[[2]], ref_data_gene_properties[[2]])$zstat
+  KDE_cv <- ks::kde.test(sim_data_gene_properties[[3]], ref_data_gene_properties[[3]])$zstat
+  KDE_genecor <- ks::kde.test(sim_data_gene_properties[[4]], ref_data_gene_properties[[4]])$zstat
+  KDE_genezero <- ks::kde.test(sim_data_gene_properties[[5]], ref_data_gene_properties[[5]])$zstat
+  KDE_dispersion <- ks::kde.test(sim_data_gene_properties[[6]], ref_data_gene_properties[[6]])$zstat
+
+
   ## Bivariate
   ### mean vs sd
-  message("6-mean expression vs sd")
+  message("7-mean expression vs sd")
   meanvssd_ref <- matrix(c(ref_data_gene_properties$mean_expression,
                            ref_data_gene_properties$sd), ncol = 2)
   meanvssd_sim <- matrix(c(sim_data_gene_properties$mean_expression,
@@ -211,9 +231,11 @@ data_properties_summary <- function(
     method = "o")
   meanvssd <- mean(meanvssd$estimate)
 
+  KDE_meanvssd <- ks::kde.test(meanvssd_ref, meanvssd_sim)$zstat
+
 
   ### mean vs zero
-  message("7-mean expression vs zero fraction of genes")
+  message("8-mean expression vs zero fraction of genes")
   meanvszero_ref <- matrix(c(ref_data_gene_properties$mean_expression,
                              ref_data_gene_properties$zero_fraction_gene), ncol = 2)
   meanvszero_sim <- matrix(c(sim_data_gene_properties$mean_expression,
@@ -226,9 +248,11 @@ data_properties_summary <- function(
     method = "o")
   meanvszero <- mean(meanvszero$estimate)
 
+  KDE_meanvszero <- ks::kde.test(meanvszero_ref, meanvszero_sim)$zstat
+
 
   ### mean vs dispersion
-  message("8-mean expression vs dispersion")
+  message("9-mean expression vs dispersion")
   meanvsdispersion_ref <- matrix(c(ref_data_gene_properties$mean_expression,
                                    ref_data_gene_properties$dispersion), ncol = 2)
   meanvsdispersion_sim <- matrix(c(sim_data_gene_properties$mean_expression,
@@ -240,6 +264,8 @@ data_properties_summary <- function(
     threads = RcppParallel::defaultNumThreads(),
     method = "o")
   meanvsdispersion <- mean(meanvsdispersion$estimate)
+
+  KDE_meanvsdispersion <- ks::kde.test(meanvsdispersion_ref, meanvsdispersion_sim)$zstat
 
 
   return(list(MAD_library = MAD_library,
@@ -270,7 +296,13 @@ data_properties_summary <- function(
               RMSE_TMM = RMSE_TMM,
               `RMSE_effective library` = RMSE_elibrary,
               `RMSE_cell outlier` = RMSE_outcell,
-              `library size vs zero fraction of cells` = libraryvscellzero,
+              KDE_library = KDE_library,
+              `KDE_zero fraction of cells` = KDE_cellzero,
+              `KDE_cell correlation` = KDE_cellcor,
+              KDE_TMM = KDE_TMM,
+              `KDE_effective library` = KDE_elibrary,
+              `KS library size vs zero fraction of cells` = libraryvscellzero,
+               `KDE library size vs zero fraction of cells` = KDE_libraryvscellzero,
               `MAD_mean expression` = MAD_mean,
               MAD_sd = MAD_sd,
               MAD_cv = MAD_cv,
@@ -304,9 +336,18 @@ data_properties_summary <- function(
               `RMSE_zero fraction of genes` = RMSE_genezero,
               RMSE_dispersion = RMSE_dispersion,
               `RMSE_gene outlier` = RMSE_dispersion,
-              `mean expression vs sd` = meanvssd,
-              `mean expression vs zero fraction of genes` = meanvszero,
-              `mean expression vs dispersion` = meanvsdispersion))
+              `KDE_mean expression` = KDE_mean,
+              KDE_sd = KDE_sd,
+              KDE_cv = KDE_cv,
+              `KDE_gene correlation` = KDE_genecor,
+              `KDE_zero fraction of genes` = KDE_genezero,
+              KDE_dispersion = KDE_dispersion,
+              `KS mean expression vs sd` = meanvssd,
+              `KS mean expression vs zero fraction of genes` = meanvszero,
+              `KS mean expression vs dispersion` = meanvsdispersion,
+              `KDE mean expression vs sd` = KDE_meanvssd,
+              `KDE mean expression vs zero fraction of genes` = KDE_meanvszero,
+              `KDE mean expression vs dispersion` = KDE_meanvsdispersion))
 
 }
 
