@@ -58,7 +58,7 @@ data_properties_summary <- function(
   message("1-MAD")
   MAD_library <- median(abs(ref_data_cell_properties[[1]] - sim_data_cell_properties[[1]]))
   MAD_cellzero <- median(abs(ref_data_cell_properties[[2]] - sim_data_cell_properties[[2]]))
-  MAD_cellcor <- median(abs(ref_data_cell_properties[[3]] - sim_data_cell_properties[[3]]))
+  # MAD_cellcor <- median(abs(ref_data_cell_properties[[3]] - sim_data_cell_properties[[3]]))
   MAD_TMM <- median(abs(ref_data_cell_properties[[4]] - sim_data_cell_properties[[4]]))
   MAD_elibrary <- median(abs(ref_data_cell_properties[[5]] - sim_data_cell_properties[[5]]))
   MAD_outcell <- median(abs(ref_data_cell_properties[[6]] - sim_data_cell_properties[[6]]))
@@ -71,7 +71,7 @@ data_properties_summary <- function(
   message("2-KS")
   KS_library <- provenance::KS.diss(ref_data_cell_properties[[1]], sim_data_cell_properties[[1]])
   KS_cellzero <- provenance::KS.diss(ref_data_cell_properties[[2]], sim_data_cell_properties[[2]])
-  KS_cellcor <- provenance::KS.diss(ref_data_cell_properties[[3]], sim_data_cell_properties[[3]])
+  # KS_cellcor <- provenance::KS.diss(ref_data_cell_properties[[3]], sim_data_cell_properties[[3]])
   KS_TMM <- provenance::KS.diss(ref_data_cell_properties[[4]], sim_data_cell_properties[[4]])
   KS_elibrary <- provenance::KS.diss(ref_data_cell_properties[[5]], sim_data_cell_properties[[5]])
 
@@ -79,7 +79,7 @@ data_properties_summary <- function(
   message("3-Correlation")
   cor_library <- cor(ref_data_cell_properties[[1]], sim_data_cell_properties[[1]], method = "pearson")
   cor_cellzero <- cor(ref_data_cell_properties[[2]], sim_data_cell_properties[[2]], method = "pearson")
-  cor_cellcor <- cor(ref_data_cell_properties[[3]], sim_data_cell_properties[[3]], method = "pearson")
+  # cor_cellcor <- cor(ref_data_cell_properties[[3]], sim_data_cell_properties[[3]], method = "pearson")
   cor_TMM <- cor(ref_data_cell_properties[[4]], sim_data_cell_properties[[4]], method = "pearson")
   cor_elibrary <- cor(ref_data_cell_properties[[5]], sim_data_cell_properties[[5]], method = "pearson")
 
@@ -91,7 +91,7 @@ data_properties_summary <- function(
   message("4-MAE")
   MAE_library <- MLmetrics::MAE(sim_data_cell_properties[[1]], ref_data_cell_properties[[1]])
   MAE_cellzero <- MLmetrics::MAE(sim_data_cell_properties[[2]], ref_data_cell_properties[[2]])
-  MAE_cellcor <- MLmetrics::MAE(sim_data_cell_properties[[3]], ref_data_cell_properties[[3]])
+  # MAE_cellcor <- MLmetrics::MAE(sim_data_cell_properties[[3]], ref_data_cell_properties[[3]])
   MAE_TMM <- MLmetrics::MAE(sim_data_cell_properties[[4]], ref_data_cell_properties[[4]])
   MAE_elibrary <- MLmetrics::MAE(sim_data_cell_properties[[5]], ref_data_cell_properties[[5]])
   MAE_outcell <- MLmetrics::MAE(sim_data_cell_properties[[6]], ref_data_cell_properties[[6]])
@@ -100,18 +100,18 @@ data_properties_summary <- function(
   message("5-RMSE")
   RMSE_library <- MLmetrics::RMSE(sim_data_cell_properties[[1]], ref_data_cell_properties[[1]])
   RMSE_cellzero <- MLmetrics::RMSE(sim_data_cell_properties[[2]], ref_data_cell_properties[[2]])
-  RMSE_cellcor <- MLmetrics::RMSE(sim_data_cell_properties[[3]], ref_data_cell_properties[[3]])
+  # RMSE_cellcor <- MLmetrics::RMSE(sim_data_cell_properties[[3]], ref_data_cell_properties[[3]])
   RMSE_TMM <- MLmetrics::RMSE(sim_data_cell_properties[[4]], ref_data_cell_properties[[4]])
   RMSE_elibrary <- MLmetrics::RMSE(sim_data_cell_properties[[5]], ref_data_cell_properties[[5]])
   RMSE_outcell <- MLmetrics::RMSE(sim_data_cell_properties[[6]], ref_data_cell_properties[[6]])
 
   ## KDE (univariate)
-  message("6-RMSE")
-  KDE_library <- ks::kde.test(sim_data_cell_properties[[1]], ref_data_cell_properties[[1]])$zstat
-  KDE_cellzero <- ks::kde.test(sim_data_cell_properties[[2]], ref_data_cell_properties[[2]])$zstat
-  KDE_cellcor <- ks::kde.test(sim_data_cell_properties[[3]], ref_data_cell_properties[[3]])$zstat
-  KDE_TMM <- ks::kde.test(sim_data_cell_properties[[4]], ref_data_cell_properties[[4]])$zstat
-  KDE_elibrary <- ks::kde.test(sim_data_cell_properties[[5]], ref_data_cell_properties[[5]])$zstat
+  message("6-KDE")
+  KDE_library <- ks::kde.test(ref_data_cell_properties[[1]], sim_data_cell_properties[[1]])$zstat
+  KDE_cellzero <- ks::kde.test(ref_data_cell_properties[[2]], sim_data_cell_properties[[2]])$zstat
+  # KDE_cellcor <- ks::kde.test(ref_data_cell_properties[[3]][1:400000], sim_data_cell_properties[[3]][1:400000])$zstat
+  KDE_TMM <- ks::kde.test(ref_data_cell_properties[[4]], sim_data_cell_properties[[4]])$zstat
+  KDE_elibrary <- ks::kde.test(ref_data_cell_properties[[5]], sim_data_cell_properties[[5]])$zstat
 
   ## Bivariate
   if(!requireNamespace("RcppParallel")){
@@ -155,7 +155,7 @@ data_properties_summary <- function(
   MAD_mean <- median(abs(ref_data_gene_properties[[1]] - sim_data_gene_properties[[1]]))
   MAD_sd <- median(abs(ref_data_gene_properties[[2]] - sim_data_gene_properties[[2]]))
   MAD_cv <- median(abs(ref_data_gene_properties[[3]] - sim_data_gene_properties[[3]]))
-  MAD_genecor <- median(abs(ref_data_gene_properties[[4]] - sim_data_gene_properties[[4]]))
+  # MAD_genecor <- median(abs(ref_data_gene_properties[[4]] - sim_data_gene_properties[[4]]))
   MAD_genezero <- median(abs(ref_data_gene_properties[[5]] - sim_data_gene_properties[[5]]))
   MAD_dispersion <- median(abs(ref_data_gene_properties[[6]] - sim_data_gene_properties[[6]]))
   MAD_outgene <- median(abs(ref_data_gene_properties[[7]] - sim_data_gene_properties[[7]]))
@@ -169,7 +169,7 @@ data_properties_summary <- function(
   KS_mean <- provenance::KS.diss(ref_data_gene_properties[[1]], sim_data_gene_properties[[1]])
   KS_sd <- provenance::KS.diss(ref_data_gene_properties[[2]], sim_data_gene_properties[[2]])
   KS_cv <- provenance::KS.diss(ref_data_gene_properties[[3]], sim_data_gene_properties[[3]])
-  KS_genecor <- provenance::KS.diss(ref_data_gene_properties[[4]], sim_data_gene_properties[[4]])
+  # KS_genecor <- provenance::KS.diss(ref_data_gene_properties[[4]], sim_data_gene_properties[[4]])
   KS_genezero <- provenance::KS.diss(ref_data_gene_properties[[5]], sim_data_gene_properties[[5]])
   KS_dispersion <- provenance::KS.diss(ref_data_gene_properties[[6]], sim_data_gene_properties[[6]])
 
@@ -178,7 +178,7 @@ data_properties_summary <- function(
   cor_mean <- cor(ref_data_gene_properties[[1]], sim_data_gene_properties[[1]], method = "pearson")
   cor_sd <- cor(ref_data_gene_properties[[2]], sim_data_gene_properties[[2]], method = "pearson")
   cor_cv <- cor(ref_data_gene_properties[[3]], sim_data_gene_properties[[3]], method = "pearson")
-  cor_genecor <- cor(ref_data_gene_properties[[4]], sim_data_gene_properties[[4]], method = "pearson")
+  # cor_genecor <- cor(ref_data_gene_properties[[4]], sim_data_gene_properties[[4]], method = "pearson")
   cor_genezero <- cor(ref_data_gene_properties[[5]], sim_data_gene_properties[[5]], method = "pearson")
   cor_dispersion <- cor(ref_data_gene_properties[[6]], sim_data_gene_properties[[6]], method = "pearson")
 
@@ -191,7 +191,7 @@ data_properties_summary <- function(
   MAE_mean <- MLmetrics::MAE(sim_data_gene_properties[[1]], ref_data_gene_properties[[1]])
   MAE_sd <- MLmetrics::MAE(sim_data_gene_properties[[2]], ref_data_gene_properties[[2]])
   MAE_cv <- MLmetrics::MAE(sim_data_gene_properties[[3]], ref_data_gene_properties[[3]])
-  MAE_genecor <- MLmetrics::MAE(sim_data_gene_properties[[4]], ref_data_gene_properties[[4]])
+  # MAE_genecor <- MLmetrics::MAE(sim_data_gene_properties[[4]], ref_data_gene_properties[[4]])
   MAE_genezero <- MLmetrics::MAE(sim_data_gene_properties[[5]], ref_data_gene_properties[[5]])
   MAE_dispersion <- MLmetrics::MAE(sim_data_gene_properties[[6]], ref_data_gene_properties[[6]])
   MAE_outgene <- MLmetrics::MAE(sim_data_gene_properties[[7]], ref_data_gene_properties[[7]])
@@ -201,7 +201,7 @@ data_properties_summary <- function(
   RMSE_mean <- MLmetrics::RMSE(sim_data_gene_properties[[1]], ref_data_gene_properties[[1]])
   RMSE_sd <- MLmetrics::RMSE(sim_data_gene_properties[[2]], ref_data_gene_properties[[2]])
   RMSE_cv <- MLmetrics::RMSE(sim_data_gene_properties[[3]], ref_data_gene_properties[[3]])
-  RMSE_genecor <- MLmetrics::RMSE(sim_data_gene_properties[[4]], ref_data_gene_properties[[4]])
+  # RMSE_genecor <- MLmetrics::RMSE(sim_data_gene_properties[[4]], ref_data_gene_properties[[4]])
   RMSE_genezero <- MLmetrics::RMSE(sim_data_gene_properties[[5]], ref_data_gene_properties[[5]])
   RMSE_dispersion <- MLmetrics::RMSE(sim_data_gene_properties[[6]], ref_data_gene_properties[[6]])
   RMSE_outgene <- MLmetrics::RMSE(sim_data_gene_properties[[7]], ref_data_gene_properties[[7]])
@@ -211,7 +211,7 @@ data_properties_summary <- function(
   KDE_mean <- ks::kde.test(sim_data_gene_properties[[1]], ref_data_gene_properties[[1]])$zstat
   KDE_sd <- ks::kde.test(sim_data_gene_properties[[2]], ref_data_gene_properties[[2]])$zstat
   KDE_cv <- ks::kde.test(sim_data_gene_properties[[3]], ref_data_gene_properties[[3]])$zstat
-  KDE_genecor <- ks::kde.test(sim_data_gene_properties[[4]], ref_data_gene_properties[[4]])$zstat
+  # KDE_genecor <- ks::kde.test(sim_data_gene_properties[[4]], ref_data_gene_properties[[4]])$zstat
   KDE_genezero <- ks::kde.test(sim_data_gene_properties[[5]], ref_data_gene_properties[[5]])$zstat
   KDE_dispersion <- ks::kde.test(sim_data_gene_properties[[6]], ref_data_gene_properties[[6]])$zstat
 
@@ -270,35 +270,35 @@ data_properties_summary <- function(
 
   return(list(MAD_library = MAD_library,
               `MAD_zero fraction of cells` = MAD_cellzero,
-              `MAD_cell correlation` = MAD_cellcor,
+              # `MAD_cell correlation` = MAD_cellcor,
               MAD_TMM = MAD_TMM,
               `MAD_effective library` = MAD_elibrary,
               `MAD_cell outlier` = MAD_outcell,
               KS_library = KS_library,
               `KS_zero fraction of cells` = KS_cellzero,
-              `KS_cell correlation` = KS_cellcor,
+              # `KS_cell correlation` = KS_cellcor,
               KS_TMM = KS_TMM,
               `KS_effective library` = KS_elibrary,
               cor_library = cor_library,
               `cor_zero fraction of cells` = cor_cellzero,
-              `cor_cell correlation` = cor_cellcor,
+              # `cor_cell correlation` = cor_cellcor,
               cor_TMM = cor_TMM,
               `cor_effective library` = cor_elibrary,
               MAE_library = MAE_library,
               `MAE_zero fraction of cells` = MAE_cellzero,
-              `MAE_cell correlation` = MAE_cellcor,
+              # `MAE_cell correlation` = MAE_cellcor,
               MAE_TMM = MAE_TMM,
               `MAE_effective library` = MAE_elibrary,
               `MAE_cell outlier` = MAE_outcell,
               RMSE_library = RMSE_library,
               `RMSE_zero fraction of cells` = RMSE_cellzero,
-              `RMSE_cell correlation` = RMSE_cellcor,
+              # `RMSE_cell correlation` = RMSE_cellcor,
               RMSE_TMM = RMSE_TMM,
               `RMSE_effective library` = RMSE_elibrary,
               `RMSE_cell outlier` = RMSE_outcell,
               KDE_library = KDE_library,
               `KDE_zero fraction of cells` = KDE_cellzero,
-              `KDE_cell correlation` = KDE_cellcor,
+              # `KDE_cell correlation` = KDE_cellcor,
               KDE_TMM = KDE_TMM,
               `KDE_effective library` = KDE_elibrary,
               `KS library size vs zero fraction of cells` = libraryvscellzero,
@@ -307,40 +307,40 @@ data_properties_summary <- function(
               MAD_sd = MAD_sd,
               MAD_cv = MAD_cv,
               `MAD_gene correlation` = MAD_genecor,
-              `MAD_zero fraction of genes` = MAD_genezero,
+              # `MAD_zero fraction of genes` = MAD_genezero,
               MAD_dispersion = MAD_dispersion,
               `MAD_gene outlier` = MAD_dispersion,
               `KS_mean expression` = KS_mean,
               KS_sd = KS_sd,
               KS_cv = KS_cv,
               `KS_gene correlation` = KS_genecor,
-              `KS_zero fraction of genes` = KS_genezero,
+              # `KS_zero fraction of genes` = KS_genezero,
               KS_dispersion = KS_dispersion,
               `cor_mean expression` = cor_mean,
               cor_sd = cor_sd,
               cor_cv = cor_cv,
-              `cor_gene correlation` = cor_genecor,
+              # `cor_gene correlation` = cor_genecor,
               `cor_zero fraction of genes` = cor_genezero,
               cor_dispersion = cor_dispersion,
               `MAE_mean expression` = MAE_mean,
               MAE_sd = MAE_sd,
               MAE_cv = MAE_cv,
               `MAE_gene correlation` = MAE_genecor,
-              `MAE_zero fraction of genes` = MAE_genezero,
+              # `MAE_zero fraction of genes` = MAE_genezero,
               MAE_dispersion = MAE_dispersion,
               `MAE_gene outlier` = MAE_dispersion,
               `RMSE_mean expression` = RMSE_mean,
               RMSE_sd = RMSE_sd,
               RMSE_cv = RMSE_cv,
               `RMSE_gene correlation` = RMSE_genecor,
-              `RMSE_zero fraction of genes` = RMSE_genezero,
+              # `RMSE_zero fraction of genes` = RMSE_genezero,
               RMSE_dispersion = RMSE_dispersion,
               `RMSE_gene outlier` = RMSE_dispersion,
               `KDE_mean expression` = KDE_mean,
               KDE_sd = KDE_sd,
               KDE_cv = KDE_cv,
               `KDE_gene correlation` = KDE_genecor,
-              `KDE_zero fraction of genes` = KDE_genezero,
+              # `KDE_zero fraction of genes` = KDE_genezero,
               KDE_dispersion = KDE_dispersion,
               `KS mean expression vs sd` = meanvssd,
               `KS mean expression vs zero fraction of genes` = meanvszero,
