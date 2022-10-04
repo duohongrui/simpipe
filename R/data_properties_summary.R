@@ -22,7 +22,8 @@ data_properties_summary <- function(
   ref_data_cell_properties,
   sim_data_cell_properties,
   ref_data_gene_properties,
-  sim_data_gene_properties
+  sim_data_gene_properties,
+  ncore = 1
 ){
   ###------------------------------------------------------------------------###
   ###                           Check
@@ -130,7 +131,7 @@ data_properties_summary <- function(
   libraryvscellzero <- fasano.franceschini.test::fasano.franceschini.test(
     libraryvscellzero_ref,
     libraryvscellzero_sim,
-    threads = RcppParallel::defaultNumThreads(),
+    threads = ncore,
     method = "o")
   libraryvscellzero <- mean(libraryvscellzero$estimate)
 
@@ -227,7 +228,7 @@ data_properties_summary <- function(
   meanvssd <- fasano.franceschini.test::fasano.franceschini.test(
     meanvssd_ref,
     meanvssd_sim,
-    threads = RcppParallel::defaultNumThreads(),
+    threads = ncore,
     method = "o")
   meanvssd <- mean(meanvssd$estimate)
 
@@ -244,7 +245,7 @@ data_properties_summary <- function(
   meanvszero <- fasano.franceschini.test::fasano.franceschini.test(
     meanvszero_ref,
     meanvszero_sim,
-    threads = RcppParallel::defaultNumThreads(),
+    threads = ncore,
     method = "o")
   meanvszero <- mean(meanvszero$estimate)
 
@@ -261,7 +262,7 @@ data_properties_summary <- function(
   meanvsdispersion <- fasano.franceschini.test::fasano.franceschini.test(
     meanvsdispersion_ref,
     meanvsdispersion_sim,
-    threads = RcppParallel::defaultNumThreads(),
+    threads = ncore,
     method = "o")
   meanvsdispersion <- mean(meanvsdispersion$estimate)
 
@@ -306,8 +307,8 @@ data_properties_summary <- function(
               `MAD_mean expression` = MAD_mean,
               MAD_sd = MAD_sd,
               MAD_cv = MAD_cv,
-              `MAD_gene correlation` = MAD_genecor,
-              # `MAD_zero fraction of genes` = MAD_genezero,
+              # `MAD_gene correlation` = MAD_genecor,
+              `MAD_zero fraction of genes` = MAD_genezero,
               MAD_dispersion = MAD_dispersion,
               `MAD_gene outlier` = MAD_dispersion,
               `KS_mean expression` = KS_mean,
