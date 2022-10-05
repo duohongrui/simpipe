@@ -8,7 +8,8 @@ data_properties_summary(
   ref_data_cell_properties,
   sim_data_cell_properties,
   ref_data_gene_properties,
-  sim_data_gene_properties
+  sim_data_gene_properties,
+  ncore = 1
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ data_properties_summary(
 \item{ref_data_gene_properties}{Gene properties of reference data}
 
 \item{sim_data_gene_properties}{Gene properties of simulated data}
+
+\item{ncore}{The number of CPU cores to use.}
 }
 \value{
 A list
