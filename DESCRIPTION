@@ -16,15 +16,16 @@ Description: The series steps of estimating parameters from real data, simulatin
     involved in this project and we will still add new important methods in the future.
 License: GPL (>= 3)
 Depends: R (>= 4.0)
-Imports: tidyr,
-         purrr,
-         assertthat,
-         babelwhale,
-         dplyr,
-         simutils,
-         simmethods,
-         dynwrap,
-         stringr
+Imports: 
+    tidyr,
+    purrr,
+    assertthat,
+    babelwhale,
+    dplyr,
+    simutils,
+    simmethods,
+    dynwrap,
+    stringr
 Remotes: 
     duohongrui/simmethods@master,
     duohongrui/simutils@master,
