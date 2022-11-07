@@ -102,6 +102,10 @@ data_properties_summary <- function(
   RMSE_outcell <- MLmetrics::RMSE(sim_data_cell_properties[[6]], ref_data_cell_properties[[6]])
 
   ## OV
+  if(!requireNamespace("overlapping")){
+    message("Installing overlapping package...")
+    install.packages("overlapping")
+  }
   message("5-OV")
   OV_library <- as.numeric(overlapping::overlap(list(x = ref_data_cell_properties[[1]],
                                                      y = sim_data_cell_properties[[1]]))[["OV"]])
@@ -114,6 +118,10 @@ data_properties_summary <- function(
   OV_elibrary <- as.numeric(overlapping::overlap(list(x = ref_data_cell_properties[[5]],
                                                       y = sim_data_cell_properties[[5]]))[["OV"]])
   ## bhattacharyya distance
+  if(!requireNamespace("philentropy")){
+    message("Installing philentropy package...")
+    install.packages("philentropy")
+  }
   message("6-bhattacharyya distance")
   BH_library <- philentropy::distance(rbind(ref_data_cell_properties$library_size/sum(ref_data_cell_properties$library_size),
                                             sim_data_cell_properties$library_size/sum(sim_data_cell_properties$library_size)),
@@ -141,6 +149,10 @@ data_properties_summary <- function(
     message("Installing fasano.franceschini.test package...")
     install.packages("fasano.franceschini.test")
   }
+  if(!requireNamespace("ks")){
+    message("Installing ks package...")
+    install.packages("ks")
+  }
   message("7-library size vs zero fraction of cells")
   libraryvscellzero_ref <- matrix(c(log10(ref_data_cell_properties$library_size)+1,
                                     ref_data_cell_properties$zero_fraction_cell), ncol = 2)
@@ -149,8 +161,7 @@ data_properties_summary <- function(
   libraryvscellzero <- fasano.franceschini.test::fasano.franceschini.test(
     libraryvscellzero_ref,
     libraryvscellzero_sim,
-    threads = ncore,
-    method = "o")
+    threads = ncore)
   libraryvscellzero <- mean(libraryvscellzero$estimate)
 
   KDE_libraryvscellzero <- ks::kde.test(libraryvscellzero_ref, libraryvscellzero_sim)$zstat
@@ -269,8 +280,7 @@ data_properties_summary <- function(
   meanvssd <- fasano.franceschini.test::fasano.franceschini.test(
     meanvssd_ref,
     meanvssd_sim,
-    threads = ncore,
-    method = "o")
+    threads = ncore)
   meanvssd <- mean(meanvssd$estimate)
 
   KDE_meanvssd <- ks::kde.test(meanvssd_ref, meanvssd_sim)$zstat
