@@ -296,8 +296,7 @@ data_properties_summary <- function(
   meanvszero <- fasano.franceschini.test::fasano.franceschini.test(
     meanvszero_ref,
     meanvszero_sim,
-    threads = ncore,
-    method = "o")
+    threads = ncore)
   meanvszero <- mean(meanvszero$estimate)
 
   KDE_meanvszero <- ks::kde.test(meanvszero_ref, meanvszero_sim)$zstat
@@ -313,8 +312,7 @@ data_properties_summary <- function(
   meanvsdispersion <- fasano.franceschini.test::fasano.franceschini.test(
     meanvsdispersion_ref,
     meanvsdispersion_sim,
-    threads = ncore,
-    method = "o")
+    threads = ncore)
   meanvsdispersion <- mean(meanvsdispersion$estimate)
 
   KDE_meanvsdispersion <- ks::kde.test(meanvsdispersion_ref, meanvsdispersion_sim)$zstat
