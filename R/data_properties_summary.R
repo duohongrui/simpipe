@@ -214,10 +214,9 @@ data_properties_summary <- function(
   MAD_mean <- median(abs(ref_data_gene_properties[[1]] - sim_data_gene_properties[[1]]))
   MAD_sd <- median(abs(ref_data_gene_properties[[2]] - sim_data_gene_properties[[2]]))
   MAD_cv <- median(abs(ref_data_gene_properties[[3]] - sim_data_gene_properties[[3]]))
-  MAD_genecor <- median(abs(ref_data_gene_properties[[4]] - sim_data_gene_properties[[4]]))
-  MAD_genezero <- median(abs(ref_data_gene_properties[[5]] - sim_data_gene_properties[[5]]))
-  MAD_dispersion <- median(abs(ref_data_gene_properties[[6]] - sim_data_gene_properties[[6]]))
-  MAD_outgene <- median(abs(ref_data_gene_properties[[7]] - sim_data_gene_properties[[7]]))
+  MAD_genezero <- median(abs(ref_data_gene_properties[[4]] - sim_data_gene_properties[[4]]))
+  MAD_dispersion <- median(abs(ref_data_gene_properties[[5]] - sim_data_gene_properties[[5]]))
+  MAD_outgene <- median(abs(ref_data_gene_properties[[6]] - sim_data_gene_properties[[6]]))
 
   ## KS Distance
   if(!requireNamespace("provenance")){
@@ -228,9 +227,8 @@ data_properties_summary <- function(
   KS_mean <- provenance::KS.diss(ref_data_gene_properties[[1]], sim_data_gene_properties[[1]])
   KS_sd <- provenance::KS.diss(ref_data_gene_properties[[2]], sim_data_gene_properties[[2]])
   KS_cv <- provenance::KS.diss(ref_data_gene_properties[[3]], sim_data_gene_properties[[3]])
-  KS_genecor <- provenance::KS.diss(ref_data_gene_properties[[4]], sim_data_gene_properties[[4]])
-  KS_genezero <- provenance::KS.diss(ref_data_gene_properties[[5]], sim_data_gene_properties[[5]])
-  KS_dispersion <- provenance::KS.diss(ref_data_gene_properties[[6]], sim_data_gene_properties[[6]])
+  KS_genezero <- provenance::KS.diss(ref_data_gene_properties[[4]], sim_data_gene_properties[[4]])
+  KS_dispersion <- provenance::KS.diss(ref_data_gene_properties[[5]], sim_data_gene_properties[[5]])
 
   ## MAE
   if(!requireNamespace("MLmetrics")){
@@ -241,20 +239,18 @@ data_properties_summary <- function(
   MAE_mean <- MLmetrics::MAE(sim_data_gene_properties[[1]], ref_data_gene_properties[[1]])
   MAE_sd <- MLmetrics::MAE(sim_data_gene_properties[[2]], ref_data_gene_properties[[2]])
   MAE_cv <- MLmetrics::MAE(sim_data_gene_properties[[3]], ref_data_gene_properties[[3]])
-  MAE_genecor <- MLmetrics::MAE(sim_data_gene_properties[[4]], ref_data_gene_properties[[4]])
-  MAE_genezero <- MLmetrics::MAE(sim_data_gene_properties[[5]], ref_data_gene_properties[[5]])
-  MAE_dispersion <- MLmetrics::MAE(sim_data_gene_properties[[6]], ref_data_gene_properties[[6]])
-  MAE_outgene <- MLmetrics::MAE(sim_data_gene_properties[[7]], ref_data_gene_properties[[7]])
+  MAE_genezero <- MLmetrics::MAE(sim_data_gene_properties[[4]], ref_data_gene_properties[[4]])
+  MAE_dispersion <- MLmetrics::MAE(sim_data_gene_properties[[5]], ref_data_gene_properties[[5]])
+  MAE_outgene <- MLmetrics::MAE(sim_data_gene_properties[[6]], ref_data_gene_properties[[6]])
 
   ## RMSE
   message("4-RMSE")
   RMSE_mean <- MLmetrics::RMSE(sim_data_gene_properties[[1]], ref_data_gene_properties[[1]])
   RMSE_sd <- MLmetrics::RMSE(sim_data_gene_properties[[2]], ref_data_gene_properties[[2]])
   RMSE_cv <- MLmetrics::RMSE(sim_data_gene_properties[[3]], ref_data_gene_properties[[3]])
-  RMSE_genecor <- MLmetrics::RMSE(sim_data_gene_properties[[4]], ref_data_gene_properties[[4]])
-  RMSE_genezero <- MLmetrics::RMSE(sim_data_gene_properties[[5]], ref_data_gene_properties[[5]])
-  RMSE_dispersion <- MLmetrics::RMSE(sim_data_gene_properties[[6]], ref_data_gene_properties[[6]])
-  RMSE_outgene <- MLmetrics::RMSE(sim_data_gene_properties[[7]], ref_data_gene_properties[[7]])
+  RMSE_genezero <- MLmetrics::RMSE(sim_data_gene_properties[[4]], ref_data_gene_properties[[4]])
+  RMSE_dispersion <- MLmetrics::RMSE(sim_data_gene_properties[[5]], ref_data_gene_properties[[5]])
+  RMSE_outgene <- MLmetrics::RMSE(sim_data_gene_properties[[6]], ref_data_gene_properties[[6]])
 
   ## OV
   message("5-OV")
@@ -264,11 +260,9 @@ data_properties_summary <- function(
                                                 y = ref_data_gene_properties[[2]]))[["OV"]])
   OV_cv <- as.numeric(overlapping::overlap(list(x = sim_data_gene_properties[[3]],
                                                 y = ref_data_gene_properties[[3]]))[["OV"]])
-  OV_genecor <- as.numeric(overlapping::overlap(list(x = sim_data_gene_properties[[4]],
-                                                     y = ref_data_gene_properties[[4]]))[["OV"]])
-  OV_genezero <- as.numeric(overlapping::overlap(list(x = sim_data_gene_properties[[5]],
-                                                      y = ref_data_gene_properties[[5]]))[["OV"]])
-  OV_dispersion <- as.numeric(overlapping::overlap(list(x = sim_data_gene_properties[[6]],
+  OV_genezero <- as.numeric(overlapping::overlap(list(x = sim_data_gene_properties[[4]],
+                                                      y = ref_data_gene_properties[[4]]))[["OV"]])
+  OV_dispersion <- as.numeric(overlapping::overlap(list(x = sim_data_gene_properties[[5]],
                                                         y = ref_data_gene_properties[[6]]))[["OV"]])
 
   ## bhattacharyya distance
@@ -282,9 +276,6 @@ data_properties_summary <- function(
   BH_cv <- philentropy::distance(rbind(ref_data_gene_properties$cv/sum(ref_data_gene_properties$cv),
                                        sim_data_gene_properties$cv/sum(sim_data_gene_properties$cv)),
                                  method = "bhattacharyya")
-  BH_genecor <- philentropy::distance(rbind(ref_data_gene_properties$gene_cor/sum(ref_data_gene_properties$gene_cor),
-                                            sim_data_gene_properties$gene_cor/sum(sim_data_gene_properties$gene_cor)),
-                                      method = "bhattacharyya")
   BH_genezero <- philentropy::distance(rbind(ref_data_gene_properties$zero_fraction_gene/sum(ref_data_gene_properties$zero_fraction_gene),
                                              sim_data_gene_properties$zero_fraction_gene/sum(sim_data_gene_properties$zero_fraction_gene)),
                                        method = "bhattacharyya")
@@ -380,40 +371,34 @@ data_properties_summary <- function(
               `MAD_mean expression` = MAD_mean,
               MAD_sd = MAD_sd,
               MAD_cv = MAD_cv,
-              `MAD_gene correlation` = MAD_genecor,
               `MAD_zero fraction of genes` = MAD_genezero,
               MAD_dispersion = MAD_dispersion,
               `MAD_gene outlier` = MAD_dispersion,
               `KS_mean expression` = KS_mean,
               KS_sd = KS_sd,
               KS_cv = KS_cv,
-              `KS_gene correlation` = KS_genecor,
               `KS_zero fraction of genes` = KS_genezero,
               KS_dispersion = KS_dispersion,
               `MAE_mean expression` = MAE_mean,
               MAE_sd = MAE_sd,
               MAE_cv = MAE_cv,
-              `MAE_gene correlation` = MAE_genecor,
               `MAE_zero fraction of genes` = MAE_genezero,
               MAE_dispersion = MAE_dispersion,
               `MAE_gene outlier` = MAE_dispersion,
               `RMSE_mean expression` = RMSE_mean,
               RMSE_sd = RMSE_sd,
               RMSE_cv = RMSE_cv,
-              `RMSE_gene correlation` = RMSE_genecor,
               `RMSE_zero fraction of genes` = RMSE_genezero,
               RMSE_dispersion = RMSE_dispersion,
               `RMSE_gene outlier` = RMSE_dispersion,
               `OV_mean expression` = OV_mean,
               OV_sd = OV_sd,
               OV_cv = OV_cv,
-              `OV_gene correlation` = OV_genecor,
               `OV_zero fraction of genes` = OV_genezero,
               OV_dispersion = OV_dispersion,
               `bhattacharyya distance_mean expression` = unname(BH_mean),
               `bhattacharyya distance_sd` = unname(BH_sd),
               `bhattacharyya distance_cv` = unname(BH_cv),
-              `bhattacharyya distance_gene correlation` = unname(BH_genecor),
               `bhattacharyya distance_zero fraction of genes` = unname(BH_genezero),
               `bhattacharyya distance_dispersion` = unname(BH_dispersion),
               `KS mean expression vs sd` = meanvssd,
