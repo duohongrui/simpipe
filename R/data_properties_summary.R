@@ -194,19 +194,18 @@ data_properties_summary <- function(
   ###                           Gene Level
   ###------------------------------------------------------------------------###
 
-  add_number <- abs(length(ref_data_gene_properties$gene_cor) - length(sim_data_gene_properties$gene_cor))
-  sample_number <- sample(ref_data_gene_properties$gene_cor, add_number, replace = TRUE)
-  ref_data_gene_properties$gene_cor <- c(ref_data_gene_properties$gene_cor, sample_number)
-  ref_data_gene_properties$gene_cor <- sort(ref_data_gene_properties$gene_cor)
-
   # cv length
-  cv_length <- min(length(ref_data_gene_properties$cv), length(sim_data_gene_properties$cv))
-  ref_data_gene_properties$cv <- ref_data_gene_properties$cv[1:cv_length]
-  sim_data_gene_properties$cv <- sim_data_gene_properties$cv[1:cv_length]
-  # gene cor length
-  genecor_length <- min(length(ref_data_gene_properties$gene_cor), length(sim_data_gene_properties$gene_cor))
-  ref_data_gene_properties$gene_cor <- ref_data_gene_properties$gene_cor[1:genecor_length]
-  sim_data_gene_properties$gene_cor <- sim_data_gene_properties$gene_cor[1:genecor_length]
+  add_number <- abs(length(ref_data_gene_properties$cv) - length(sim_data_gene_properties$cv))
+  if(length(ref_data_gene_properties$cv) >= length(sim_data_gene_properties$cv)){
+    sample_number <- sample(sim_data_gene_properties$cv, add_number, replace = TRUE)
+    sim_data_gene_properties$cv <- c(sim_data_gene_properties$cv, sample_number)
+    sim_data_gene_properties$cv <- sort(sim_data_gene_properties$cv)
+  }else{
+    sample_number <- sample(ref_data_gene_properties$cv, add_number, replace = TRUE)
+    ref_data_gene_properties$cv <- c(ref_data_gene_properties$cv, sample_number)
+    ref_data_gene_properties$cv <- sort(ref_data_gene_properties$cv)
+  }
+
 
   ## MAD
   message("Gene properties...")
