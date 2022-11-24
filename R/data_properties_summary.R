@@ -262,7 +262,7 @@ data_properties_summary <- function(
   OV_genezero <- as.numeric(overlapping::overlap(list(x = sim_data_gene_properties[[4]],
                                                       y = ref_data_gene_properties[[4]]))[["OV"]])
   OV_dispersion <- as.numeric(overlapping::overlap(list(x = sim_data_gene_properties[[5]],
-                                                        y = ref_data_gene_properties[[6]]))[["OV"]])
+                                                        y = ref_data_gene_properties[[5]]))[["OV"]])
 
   ## bhattacharyya distance
   message("6-bhattacharyya distance")
