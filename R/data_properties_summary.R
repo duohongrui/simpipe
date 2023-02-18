@@ -39,6 +39,7 @@ data_properties_summary <- function(
   ###------------------------------------------------------------------------###
 
   if(length(ref_data_cell_properties[[1]]) != length(sim_data_cell_properties[[1]])){
+    message("The cell number in reference data is not equal to that in simulated data")
     MAD_library = NA
     MAD_cellzero = NA
     MAD_cellcor = NA
@@ -229,6 +230,7 @@ data_properties_summary <- function(
 
 
   if(length(ref_data_gene_properties[[1]]) != sim_data_gene_properties[[1]]){
+    message("The gene number in reference data is not equal to that in simulated data")
     MAD_mean = NA
     MAD_sd = NA
     MAD_cv = NA
