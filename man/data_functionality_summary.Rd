@@ -10,7 +10,8 @@ data_functionality_summary(
   batch = NULL,
   k = NULL,
   DEGs = NULL,
-  verbose = NULL
+  verbose = NULL,
+  threads = 1
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ data_functionality_summary(
 \item{DEGs}{A list of DEGs with the names of \code{xxxvsxxx}. Note that the names of DEGs are in the rownames of the matrix or the dataframe and the names of \code{xxx} is in the \code{group} characters. Needed if data is a matrix or a dataframe and you want to evaluate the DEGs.}
 
 \item{verbose}{Whether the process massages are returned.}
+
+\item{threads}{How many cores used for parallel computation}
 }
 \value{
 A list of three aspects of the data

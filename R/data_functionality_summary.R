@@ -6,6 +6,7 @@
 #' @param k k-nearest neighborhoods of cells.
 #' @param DEGs A list of DEGs with the names of `xxxvsxxx`. Note that the names of DEGs are in the rownames of the matrix or the dataframe and the names of `xxx` is in the `group` characters. Needed if data is a matrix or a dataframe and you want to evaluate the DEGs.
 #' @param verbose Whether the process massages are returned.
+#' @param threads How many cores used for parallel computation
 #' @importFrom SingleCellExperiment counts colData rowData
 #' @importFrom simutils calculate_DEGs_properties
 #'
@@ -18,8 +19,8 @@ data_functionality_summary <- function(
   batch = NULL,
   k = NULL,
   DEGs = NULL,
-  verbose = NULL
-
+  verbose = NULL,
+  threads = 1
 ){
   ### data check and other imformation of cells and genes
   if("simpipe_simulation" %in% class(data)){
@@ -158,12 +159,16 @@ data_functionality_summary <- function(
       .f = function(id){
         col_data <- data_coldata[[id]]
         if("plate" %in% colnames(col_data)){
-          as.character(col_data$"plate")
+          group_evl <- as.character(col_data$"plate")
         }else if("group" %in% colnames(col_data)){
-          as.character(col_data$"group")
+          group_evl <- as.character(col_data$"group")
         }else{
-          NULL
+          group_evl <- 0
         }
+        if(length(unique(group_evl)) == 1){
+          group_evl <- NULL
+        }
+        group_evl
       }
     ) %>% stats::setNames(names(data))
     ### Batch information
@@ -172,40 +177,48 @@ data_functionality_summary <- function(
       .f = function(id){
         col_data <- data_coldata[[id]]
         if("batch" %in% colnames(col_data)){
-          col_data$"batch"
+          batch_evl <- col_data$"batch"
         }else{
-          NULL
+          batch_evl <- 0
         }
+        if(length(unique(batch_evl)) == 1){
+          batch_evl <- NULL
+        }
+        batch_evl
       }
     ) %>% stats::setNames(names(data))
-    ### Group information
+    ### DEGs information
     DEGs <- purrr::map(
       .x = 1:data_number,
       .f = function(id){
         col_data <- data_coldata[[id]]
         row_data <- data_rowdata[[id]]
         if("plate" %in% colnames(col_data)){
-          group <- col_data$"plate"
+          group_eval <- col_data$"plate"
         }else if("group" %in% colnames(col_data)){
-          group <- col_data$"group"
+          group_eval <- col_data$"group"
         }else{
-          NULL
+          group_eval <- 0
         }
-        group <- as.character(group)
-        group_combn <- utils::combn(unique(group), 2)
-        de_genes <- data_rownames[[id]][which(row_data$"de_gene" == "yes")]
-        ## iterate to extract the DEGs by every pair of groups
-        sim_DEGs <- list()
-        combn_number <- dim(group_combn)[2]
-        for(w in 1:combn_number){
-          conb1 <- group_combn[1, w]
-          conb2 <- group_combn[2, w]
-          conb_name <- paste0(group_combn[, w], collapse = "vs")
-          fac1 <- row_data[, stringr::str_ends(colnames(row_data), pattern = conb1)]
-          fac2 <- row_data[, stringr::str_ends(colnames(row_data), pattern = conb2)]
-          index <- fac1 != fac2
-          DEGs <- data_rownames[[id]][index]
-          sim_DEGs[[conb_name]] <- DEGs
+        if(length(unique(group_eval)) > 1){
+          group <- as.character(group_eval)
+          group_combn <- utils::combn(unique(group), 2)
+          de_genes <- data_rownames[[id]][which(row_data$"de_gene" == "yes")]
+          ## iterate to extract the DEGs by every pair of groups
+          sim_DEGs <- list()
+          combn_number <- dim(group_combn)[2]
+          for(w in 1:combn_number){
+            conb1 <- group_combn[1, w]
+            conb2 <- group_combn[2, w]
+            conb_name <- paste0(group_combn[, w], collapse = "vs")
+            fac1 <- row_data[, stringr::str_ends(colnames(row_data), pattern = conb1)]
+            fac2 <- row_data[, stringr::str_ends(colnames(row_data), pattern = conb2)]
+            index <- fac1 != fac2
+            DEGs <- data_rownames[[id]][index]
+            sim_DEGs[[conb_name]] <- DEGs
+          }
+        }else{
+          sim_DEGs <- NULL
         }
         sim_DEGs
       }
@@ -260,5 +273,68 @@ data_functionality_summary <- function(
     DEGs = DEGs
   )
 
-  return(DEGs_evaluation)
+  ### batch evaluation
+  if(!is.null(batch)){
+    batch_evaluation <- purrr::map(
+      .x = 1:data_number,
+      .f = function(id){
+        batch_data <- count_matrices[[id]]
+        batch_info <- batch[[id]]
+        if(is.null(batch_info)){
+          NULL
+        }else{
+          simutils::calculate_batch_properties(
+            data = batch_data,
+            batch_info = batch_info,
+            k = k,
+            verbose = verbose
+          )
+        }
+      }
+    ) %>% stats::setNames(names(data))
+  }
+
+  ### group evaluation
+  if(!is.null(group)){
+    group_evaluation <- purrr::map(
+      .x = 1:data_number,
+      .f = function(id){
+        group_data <- count_matrices[[id]]
+        group_info <- group[[id]]
+        if(is.null(group_info)){
+          NULL
+        }else{
+          simutils::calculate_cluster_properties(
+            data = group_data,
+            dist = NULL,
+            cluster_info = group_info,
+            threads = threads,
+            verbose = verbose
+          )
+        }
+      }
+    ) %>% stats::setNames(names(data))
+  }
+
+  dplyr::lst(group_evaluation,
+             batch_evaluation,
+             DEGs_evaluation)
+
 }
+
+
+# a <- powsimR::CELseq2_Gene_UMI_Counts
+#
+# estimate_output <- estimate_parameters(ref_data = as.matrix(a),
+#                                        method = "Splat",
+#                                        seed = 10,
+#                                        verbose = TRUE,
+#                                        use_docker = FALSE)
+# data <- simpipe::simulate_datasets(method = "Splat",
+#                                      parameters = estimate_output,
+#                                      seed = 110,
+#                                      other_prior = list(batchCells = c(500, 500),
+#                                                         group.prob = c(0.3, 0.3, 0.4),
+#                                                         nGenes = 3000),
+#                                      verbose = TRUE,
+#                                      use_docker = FALSE)
