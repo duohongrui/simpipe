@@ -62,14 +62,17 @@ simulate_datasets <- function(
 
   ## All methods
   all_methods <- simmethods::get_method()
-  ## If method is NULL
-  if(is.null(method) & !is.null(parameters)){
-    method <- stringr::str_split(names(parameters),
-                                 pattern = "_",
-                                 simplify = T)[, 2]
+  ## data name and method name
+  if(!is.null(parameters)){
     data_name <- stringr::str_split(names(parameters),
                                     pattern = "_",
                                     simplify = T)[, 1]
+    if(is.null(method)){
+      method <- stringr::str_split(names(parameters),
+                                   pattern = "_",
+                                   simplify = T)[, 2]
+
+    }
   }
   ## If method is not NULL
   if(!is.null(method)){
@@ -88,9 +91,6 @@ simulate_datasets <- function(
                                   msg = "The number of reference datasets is not equal to the length of parameters that you have input!")
         }
       }
-      ## For scDesign and SPsimSeq method
-      data_length <- length(ref_data)
-      data_name <- paste0("refdata", 1:data_length)
     }
   }
   ## Assert that method names are right
@@ -171,7 +171,7 @@ simulate_datasets <- function(
     list_names <- paste0(names(parameters), "_", rep(seq_len(n), length(method)))
   }
   result <- stats::setNames(result, list_names)
-  result <- simutils::add_class(result, "simpipe_data")
+  result <- simutils::add_class(result, "simpipe_simulation")
   return(result)
 }
 

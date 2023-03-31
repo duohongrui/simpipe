@@ -30,7 +30,7 @@
 #                                                 verbose = TRUE,
 #                                                 use_docker = FALSE)
 #
-# result <- simpipe::simulate_datasets(method = NULL,
+# result <- simpipe::simulate_datasets(method = "Splat",
 #                                      other_prior = list(batchCells = 1000),
 #                                      parameters = estimate_output,
 #                                      seed = 10,
