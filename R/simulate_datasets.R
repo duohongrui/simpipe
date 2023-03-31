@@ -33,6 +33,7 @@
 #'
 #' @importFrom stringr str_split
 #' @importFrom stats setNames
+#' @importFrom simutils add_class
 #'
 #' @export
 #'
@@ -135,6 +136,8 @@ simulate_datasets <- function(
         other_prior_exec <- simutils::check_prior_info(method = every_exec_method[id],
                                                        step = "simulation",
                                                        other_prior = other_prior_exec)
+      }else{
+        other_prior_exec <- other_prior
       }
       if(!is.null(ref_data)){
         ref_data <- ref_data[[id]]
@@ -172,6 +175,7 @@ simulate_datasets <- function(
     list_names <- paste0(names(parameters), "_", rep(seq_len(n), length(method)))
   }
   result <- stats::setNames(result, list_names)
+  result <- simutils::add_class(result, "simpipe_data")
   return(result)
 }
 
