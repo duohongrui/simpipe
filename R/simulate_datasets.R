@@ -57,16 +57,7 @@ simulate_datasets <- function(
   if(!is.null(parameters)){
     assertthat::assert_that("simpipe_estimation" %in% class(parameters))
   }
-  # Prepare ref_data------------------------------------------------------------
-  if(is.matrix(ref_data)){
-    ref_data <- list(ref_data = ref_data)
-  }
-  if(!is.null(ref_data) & is.list(ref_data)){
-    if(!is.null(parameters)){
-      assertthat::assert_that(length(ref_data) == length(parameters),
-                              msg = "The number of reference datasets is not equal to the length of parameters that you have inputted!")
-    }
-  }
+
   # Prepare methods-------------------------------------------------------------
 
   ## All methods
@@ -79,22 +70,27 @@ simulate_datasets <- function(
     data_name <- stringr::str_split(names(parameters),
                                     pattern = "_",
                                     simplify = T)[, 1]
-  }else{
-    ## For scDesign and SPsimSeq method
-    if(is.list(ref_data)){
-      data_length <- length(ref_data)
-    }else if(is.matrix(ref_data) | is.data.frame(ref_data)){
-      data_length <- 1
-    }else{
-      stop("reference data can only be a list or a matrix or a data.frame")
-    }
-    data_name <- paste0("refdata", 1:data_length)
   }
   ## If method is not NULL
-  if(!is.null(method) & is.null(parameters)){
+  if(!is.null(method)){
     ### If method is all
     if(method[1] == "all"){
       method <- names(all_methods)
+    }
+    if(any(c("scDesign", "SPsimSeq") %in% method)){
+      ## ref data for these two methods
+      if(is.matrix(ref_data)){
+        ref_data <- list(ref_data = ref_data)
+      }
+      if(!is.null(ref_data) & is.list(ref_data)){
+        if(!is.null(parameters)){
+          assertthat::assert_that(length(ref_data) == length(parameters),
+                                  msg = "The number of reference datasets is not equal to the length of parameters that you have input!")
+        }
+      }
+      ## For scDesign and SPsimSeq method
+      data_length <- length(ref_data)
+      data_name <- paste0("refdata", 1:data_length)
     }
   }
   ## Assert that method names are right

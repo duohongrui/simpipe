@@ -31,9 +31,11 @@
 #                                                 use_docker = FALSE)
 #
 # result <- simpipe::simulate_datasets(method = NULL,
-#                                      other_prior = list(batchCells = 5000),
+#                                      other_prior = list(batchCells = 1000),
 #                                      parameters = estimate_output,
 #                                      seed = 10,
 #                                      return_format = "list",
 #                                      verbose = T,
 #                                      use_docker = FALSE)
+
+
