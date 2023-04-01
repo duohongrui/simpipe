@@ -1,10 +1,12 @@
-#' Summary
+#' Summarize the Functionality in Group, Batch and DEGs of A Simulation Method
 #'
 #' @param data The matrix or data frame of gene expression profile or the output by `simpipe::simulate_datasets`.
 #' @param group The characters of group names which cells belong to. Needed if data is a matrix or a dataframe and you want to evaluate the groups.
 #' @param batch The characters of batch names which cells belong to. Needed if data is a matrix or a dataframe and you want to evaluate the batches
 #' @param k k-nearest neighborhoods of cells.
 #' @param DEGs A list of DEGs with the names of `xxxvsxxx`. Note that the names of DEGs are in the rownames of the matrix or the dataframe and the names of `xxx` is in the `group` characters. Needed if data is a matrix or a dataframe and you want to evaluate the DEGs.
+#' @param DEA_method The DEA method to get the DEGs. Choices: edgeRQLF, edgeRQLFDetRate, MASTcpmDetRate, MASTtpmDetRate, MASTcpm, MASTtpm, limmatrend, limmavoom, ttest and wilcox. Default is edgeRQLFDetRate.
+#' @param model_method The method to establish the model. SVM, Decision tree or RF (Random Forest). Default is SVM.
 #' @param verbose Whether the process massages are returned.
 #' @param threads How many cores used for parallel computation
 #' @importFrom SingleCellExperiment counts colData rowData
@@ -19,7 +21,9 @@ data_functionality_summary <- function(
   batch = NULL,
   k = NULL,
   DEGs = NULL,
-  verbose = FALSE,
+  DEA_method = "edgeRQLFDetRate",
+  model_method = "SVM",
+  verbose = TRUE,
   threads = 1
 ){
   ### data check and other imformation of cells and genes
@@ -271,7 +275,10 @@ data_functionality_summary <- function(
   DEGs_evaluation <- simutils::calculate_DEGs_properties(
     count_matrix = count_matrices,
     group = group,
-    DEGs = DEGs
+    DEGs = DEGs,
+    DEA_method = DEA_method,
+    model_method = model_method,
+    verbose = verbose
   )
 
   ### batch evaluation

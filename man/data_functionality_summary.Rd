@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_functionality_summary.R
 \name{data_functionality_summary}
 \alias{data_functionality_summary}
-\title{Summary}
+\title{Summarize the Functionality in Group, Batch and DEGs of A Simulation Method}
 \usage{
 data_functionality_summary(
   data,
@@ -10,7 +10,9 @@ data_functionality_summary(
   batch = NULL,
   k = NULL,
   DEGs = NULL,
-  verbose = FALSE,
+  DEA_method = "edgeRQLFDetRate",
+  model_method = "SVM",
+  verbose = TRUE,
   threads = 1
 )
 }
@@ -25,6 +27,10 @@ data_functionality_summary(
 
 \item{DEGs}{A list of DEGs with the names of \code{xxxvsxxx}. Note that the names of DEGs are in the rownames of the matrix or the dataframe and the names of \code{xxx} is in the \code{group} characters. Needed if data is a matrix or a dataframe and you want to evaluate the DEGs.}
 
+\item{DEA_method}{The DEA method to get the DEGs. Choices: edgeRQLF, edgeRQLFDetRate, MASTcpmDetRate, MASTtpmDetRate, MASTcpm, MASTtpm, limmatrend, limmavoom, ttest and wilcox. Default is edgeRQLFDetRate.}
+
+\item{model_method}{The method to establish the model. SVM, Decision tree or RF (Random Forest). Default is SVM.}
+
 \item{verbose}{Whether the process massages are returned.}
 
 \item{threads}{How many cores used for parallel computation}
@@ -33,5 +39,5 @@ data_functionality_summary(
 A list of three aspects of the data
 }
 \description{
-Summary
+Summarize the Functionality in Group, Batch and DEGs of A Simulation Method
 }
