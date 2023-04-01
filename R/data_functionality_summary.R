@@ -111,7 +111,7 @@ data_functionality_summary <- function(
     }
 
     ## list
-    if(class(data[[1]][["simulate_result"]]) == "list" &
+    if(is.list(data[[1]][["simulate_result"]]) &
        length(data[[1]][["simulate_result"]]) == 3){
       count_matrices <- purrr::map(
         .x = 1:data_number,
@@ -226,8 +226,8 @@ data_functionality_summary <- function(
   }
 
   ## dataframe or matrix
-  if(class(data) == "matrix" | class(data) == "data.frame"){
-    if(class(data) == "data.frame"){
+  if(is.matrix(data) | is.data.frame(data)){
+    if(is.data.frame(data)){
       data <- list("data" = as.matrix(data))
     }else{
       data <- list("data" = data)
@@ -325,7 +325,7 @@ data_functionality_summary <- function(
 
 # a <- powsimR::CELseq2_Gene_UMI_Counts
 #
-# estimate_output <- estimate_parameters(ref_data = as.matrix(a),
+# estimate_output <- simpipe::estimate_parameters(ref_data = as.matrix(a),
 #                                        method = "Splat",
 #                                        seed = 10,
 #                                        verbose = TRUE,
