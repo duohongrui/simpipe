@@ -10,7 +10,7 @@ data_functionality_summary(
   batch = NULL,
   k = NULL,
   DEGs = NULL,
-  verbose = NULL,
+  verbose = FALSE,
   threads = 1
 )
 }

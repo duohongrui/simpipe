@@ -19,7 +19,7 @@ data_functionality_summary <- function(
   batch = NULL,
   k = NULL,
   DEGs = NULL,
-  verbose = NULL,
+  verbose = FALSE,
   threads = 1
 ){
   ### data check and other imformation of cells and genes
@@ -228,9 +228,9 @@ data_functionality_summary <- function(
   ## dataframe or matrix
   if(is.matrix(data) | is.data.frame(data)){
     if(is.data.frame(data)){
-      data <- list("data" = as.matrix(data))
+      count_matrices <- list("data" = as.matrix(data))
     }else{
-      data <- list("data" = data)
+      count_matrices <- list("data" = data)
     }
     ## DEGs
     if(!is.null(DEGs)){
@@ -336,5 +336,11 @@ data_functionality_summary <- function(
 #                                      other_prior = list(batchCells = c(500, 500),
 #                                                         group.prob = c(0.3, 0.3, 0.4),
 #                                                         nGenes = 3000),
+#                                      return_format = "list",
 #                                      verbose = TRUE,
 #                                      use_docker = FALSE)
+# data2 <- data$refdata_Splat_1$simulate_result$count_data
+# group <- data$refdata_Splat_1$simulate_result$col_meta$group
+# batch <- data$refdata_Splat_1$simulate_result$col_meta$batch
+# DEGs <- NULL
+
