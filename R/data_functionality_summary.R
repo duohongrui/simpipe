@@ -232,6 +232,7 @@ data_functionality_summary <- function(
     }else{
       count_matrices <- list("data" = data)
     }
+    data_number <- length(count_matrices)
     ## DEGs
     if(!is.null(DEGs)){
       message("The DEGs information is input...")
@@ -291,7 +292,9 @@ data_functionality_summary <- function(
           )
         }
       }
-    ) %>% stats::setNames(names(data))
+    ) %>% stats::setNames(names(count_matrices))
+  }else{
+    batch_evaluation <- NULL
   }
 
   ### group evaluation
@@ -313,7 +316,9 @@ data_functionality_summary <- function(
           )
         }
       }
-    ) %>% stats::setNames(names(data))
+    ) %>% stats::setNames(names(count_matrices))
+  }else{
+    group_evaluation <- NULL
   }
 
   dplyr::lst(group_evaluation,
