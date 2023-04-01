@@ -10,7 +10,7 @@
 #' @param verbose Whether the process massages are returned.
 #' @param threads How many cores used for parallel computation
 #' @importFrom SingleCellExperiment counts colData rowData
-#' @importFrom simutils calculate_DEGs_properties
+#' @importFrom simutils calculate_DEGs_properties calculate_batch_properties calculate_cluster_properties
 #'
 #'
 #' @return A list of three aspects of the data
