@@ -85,6 +85,7 @@ simulate_datasets <- function(
       if(is.matrix(ref_data)){
         ref_data <- list(ref_data = ref_data)
       }
+      data_name <- paste0("refdata", 1:length(ref_data))
       if(!is.null(ref_data) & is.list(ref_data)){
         if(!is.null(parameters)){
           assertthat::assert_that(length(ref_data) == length(parameters),
