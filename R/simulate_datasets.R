@@ -92,6 +92,8 @@ simulate_datasets <- function(
                                   msg = "The number of reference datasets is not equal to the length of parameters that you have input!")
         }
       }
+    }else{
+      data_name <- "ref_data"
     }
   }
   ## Assert that method names are right
