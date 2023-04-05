@@ -80,7 +80,7 @@ simulate_datasets <- function(
     if(method[1] == "all"){
       method <- names(all_methods)
     }
-    if(any(c("scDesign", "SPsimSeq", "SCRIP", "zingeR") %in% method)){
+    if(any(c("scDesign", "SPsimSeq", "SCRIP", "zingeR", "zinbwaveZinger") %in% method)){
       ## ref data for these two methods
       if(is.matrix(ref_data)){
         ref_data <- list(ref_data = ref_data)
