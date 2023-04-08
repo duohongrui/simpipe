@@ -20,9 +20,20 @@ method_execute_function_simulate <- function(
 
   # Change parameters except for "n"
   if(!is.null(other_prior)){
-    parameters <- simutils::set_parameters(parameters = parameters,
-                                           other_prior = other_prior,
-                                           method = method)
+    if(method == "ESCO"){
+      tree <- parameters[["tree"]]
+      group <- parameters[["group"]]
+      parameters <- simutils::set_parameters(parameters = parameters[["estimate_result"]],
+                                             other_prior = other_prior,
+                                             method = method)
+      parameters <- list("tree" = tree,
+                         "group" = group,
+                         "estimate_result" = parameters)
+    }else{
+      parameters <- simutils::set_parameters(parameters = parameters,
+                                             other_prior = other_prior,
+                                             method = method)
+    }
   }
   # Match arguments existing in the method function
   arguments <- dplyr::lst(parameters,
