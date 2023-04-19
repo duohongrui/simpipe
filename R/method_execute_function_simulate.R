@@ -14,21 +14,27 @@ method_execute_function_simulate <- function(
 
   # When the parameter is NULL
   if(is.null(parameters)){
-    cat("Parameters will be set by default")
+    message("Parameters will be set by default\n")
     parameters <- simutils::default_parameters(method)
   }
 
   # Change parameters except for "n"
   if(!is.null(other_prior)){
     if(method == "ESCO"){
-      tree <- parameters[["tree"]]
-      group <- parameters[["group"]]
-      parameters <- simutils::set_parameters(parameters = parameters[["estimate_result"]],
-                                             other_prior = other_prior,
-                                             method = method)
-      parameters <- list("tree" = tree,
-                         "group" = group,
-                         "estimate_result" = parameters)
+      if(length(parameters) == 3){
+        tree <- parameters[["tree"]]
+        group <- parameters[["group"]]
+        parameters <- simutils::set_parameters(parameters = parameters,
+                                               other_prior = other_prior,
+                                               method = method)
+        parameters <- list("tree" = tree,
+                           "group" = group,
+                           "estimate_result" = parameters)
+      }else{
+        parameters <- simutils::set_parameters(parameters = parameters,
+                                               other_prior = other_prior,
+                                               method = method)
+      }
     }else{
       parameters <- simutils::set_parameters(parameters = parameters,
                                              other_prior = other_prior,
