@@ -82,7 +82,7 @@ data_properties_summary <- function(
     MAD_library <- median(abs(ref_data_cell_properties[[1]] - sim_data_cell_properties[[1]]))
     MAD_cellzero <- median(abs(ref_data_cell_properties[[2]] - sim_data_cell_properties[[2]]))
     MAD_cellcor <- median(abs(ref_data_cell_properties[[3]] - sim_data_cell_properties[[3]]))
-    if(is.na(sim_data_cell_properties[[4]][1])){
+    if(any(is.na(sim_data_cell_properties[[4]][1]))){
       MAD_TMM <- NA
     }else{
       MAD_TMM <- median(abs(ref_data_cell_properties[[4]] - sim_data_cell_properties[[4]]))
@@ -99,7 +99,7 @@ data_properties_summary <- function(
     KS_library <- provenance::KS.diss(ref_data_cell_properties[[1]], sim_data_cell_properties[[1]])
     KS_cellzero <- provenance::KS.diss(ref_data_cell_properties[[2]], sim_data_cell_properties[[2]])
     KS_cellcor <- provenance::KS.diss(ref_data_cell_properties[[3]], sim_data_cell_properties[[3]])
-    if(is.na(sim_data_cell_properties[[4]][1])){
+    if(any(is.na(sim_data_cell_properties[[4]][1]))){
       KS_TMM <- NA
     }else{
       KS_TMM <- provenance::KS.diss(ref_data_cell_properties[[4]], sim_data_cell_properties[[4]])
@@ -115,7 +115,7 @@ data_properties_summary <- function(
     MAE_library <- MLmetrics::MAE(sim_data_cell_properties[[1]], ref_data_cell_properties[[1]])
     MAE_cellzero <- MLmetrics::MAE(sim_data_cell_properties[[2]], ref_data_cell_properties[[2]])
     MAE_cellcor <- MLmetrics::MAE(sim_data_cell_properties[[3]], ref_data_cell_properties[[3]])
-    if(is.na(sim_data_cell_properties[[4]][1])){
+    if(any(is.na(sim_data_cell_properties[[4]][1]))){
       MAE_TMM <- NA
     }else{
       MAE_TMM <- MLmetrics::MAE(sim_data_cell_properties[[4]], ref_data_cell_properties[[4]])
@@ -128,7 +128,7 @@ data_properties_summary <- function(
     RMSE_library <- MLmetrics::RMSE(sim_data_cell_properties[[1]], ref_data_cell_properties[[1]])
     RMSE_cellzero <- MLmetrics::RMSE(sim_data_cell_properties[[2]], ref_data_cell_properties[[2]])
     RMSE_cellcor <- MLmetrics::RMSE(sim_data_cell_properties[[3]], ref_data_cell_properties[[3]])
-    if(is.na(sim_data_cell_properties[[4]][1])){
+    if(any(is.na(sim_data_cell_properties[[4]][1]))){
       RMSE_TMM <- NA
     }else{
       RMSE_TMM <- MLmetrics::RMSE(sim_data_cell_properties[[4]], ref_data_cell_properties[[4]])
@@ -148,7 +148,7 @@ data_properties_summary <- function(
                                                         y = sim_data_cell_properties[[2]]))[["OV"]])
     OV_cellcor <- as.numeric(overlapping::overlap(list(x = ref_data_cell_properties[[3]],
                                                        y = sim_data_cell_properties[[3]]))[["OV"]])
-    if(is.na(sim_data_cell_properties[[4]][1])){
+    if(any(is.na(sim_data_cell_properties[[4]][1]))){
       OV_TMM <- NA
     }else{
       OV_TMM <- as.numeric(overlapping::overlap(list(x = ref_data_cell_properties[[4]],
@@ -171,7 +171,7 @@ data_properties_summary <- function(
     BH_cellcor <- philentropy::distance(rbind(ref_data_cell_properties$cell_cor/sum(ref_data_cell_properties$cell_cor),
                                               sim_data_cell_properties$cell_cor/sum(sim_data_cell_properties$cell_cor)),
                                         method = "bhattacharyya")
-    if(is.na(sim_data_cell_properties$TMM_factor)){
+    if(any(is.na(sim_data_cell_properties$TMM_factor))){
       BH_TMM <- NA
     }else{
       BH_TMM <- philentropy::distance(rbind(ref_data_cell_properties$TMM_factor/sum(ref_data_cell_properties$TMM_factor),
