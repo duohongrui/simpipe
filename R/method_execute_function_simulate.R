@@ -24,7 +24,7 @@ method_execute_function_simulate <- function(
       if(length(parameters) == 3){
         tree <- parameters[["tree"]]
         group <- parameters[["group"]]
-        parameters <- simutils::set_parameters(parameters = parameters,
+        parameters <- simutils::set_parameters(parameters = parameters[["estimate_result"]],
                                                other_prior = other_prior,
                                                method = method)
         parameters <- list("tree" = tree,
