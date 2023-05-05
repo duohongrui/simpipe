@@ -20,12 +20,18 @@ Imports:
     tidyr,
     purrr,
     assertthat,
-    babelwhale,
     dplyr,
     simutils,
     simmethods,
-    dynwrap,
-    stringr
+    stringr,
+    SingleCellExperiment,
+    methods,
+    provenance,
+    MLmetrics,
+    overlapping,
+    philentropy,
+    fasano.franceschini.test,
+    ks
 Remotes: 
     duohongrui/simmethods@master,
     duohongrui/simutils@master,

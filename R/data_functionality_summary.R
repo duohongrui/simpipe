@@ -11,6 +11,7 @@
 #' @param threads How many cores used for parallel computation
 #' @importFrom SingleCellExperiment counts colData rowData
 #' @importFrom simutils calculate_DEGs_properties calculate_batch_properties calculate_cluster_properties
+#' @importFrom methods is
 #'
 #'
 #' @return A list of three aspects of the data
@@ -31,7 +32,7 @@ data_functionality_summary <- function(
     data_number <- length(data)
 
     ## Check the return format
-    if(class(data[[1]][["simulate_result"]]) == "SingleCellExperiment"){
+    if(methods::is(data[[1]][["simulate_result"]], "SingleCellExperiment")){
       count_matrices <- purrr::map(
         .x = 1:data_number,
         .f = function(id){
@@ -73,7 +74,7 @@ data_functionality_summary <- function(
     }
 
     ## Seurat Object
-    if(class(data[[1]][["simulate_result"]]) == "Seurat"){
+    if(methods::is(data[[1]][["simulate_result"]], "Seurat")){
       count_matrices <- purrr::map(
         .x = 1:data_number,
         .f = function(id){

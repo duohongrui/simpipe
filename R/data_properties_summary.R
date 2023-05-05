@@ -17,6 +17,14 @@
 #' @param sim_data_gene_properties Gene properties of simulated data
 #' @param ncore The number of CPU cores to use.
 #'
+#' @importFrom stats median
+#' @importFrom utils install.packages
+#' @importFrom provenance KS.diss
+#' @importFrom MLmetrics MAE RMSE
+#' @importFrom overlapping overlap
+#' @importFrom philentropy distance
+#' @importFrom fasano.franceschini.test fasano.franceschini.test
+#' @importFrom ks kde.test
 #'
 #' @return A list
 #' @export
@@ -79,21 +87,21 @@ data_properties_summary <- function(
     ## MAD
     message("Cell properties...")
     message("1-MAD")
-    MAD_library <- median(abs(ref_data_cell_properties[[1]] - sim_data_cell_properties[[1]]))
-    MAD_cellzero <- median(abs(ref_data_cell_properties[[2]] - sim_data_cell_properties[[2]]))
-    MAD_cellcor <- median(abs(ref_data_cell_properties[[3]] - sim_data_cell_properties[[3]]))
+    MAD_library <- stats::median(abs(ref_data_cell_properties[[1]] - sim_data_cell_properties[[1]]))
+    MAD_cellzero <- stats::median(abs(ref_data_cell_properties[[2]] - sim_data_cell_properties[[2]]))
+    MAD_cellcor <- stats::median(abs(ref_data_cell_properties[[3]] - sim_data_cell_properties[[3]]))
     if(any(is.na(sim_data_cell_properties[[4]][1]))){
       MAD_TMM <- NA
     }else{
-      MAD_TMM <- median(abs(ref_data_cell_properties[[4]] - sim_data_cell_properties[[4]]))
+      MAD_TMM <- stats::median(abs(ref_data_cell_properties[[4]] - sim_data_cell_properties[[4]]))
     }
-    MAD_elibrary <- median(abs(ref_data_cell_properties[[5]] - sim_data_cell_properties[[5]]))
-    MAD_outcell <- median(abs(ref_data_cell_properties[[6]] - sim_data_cell_properties[[6]]))
+    MAD_elibrary <- stats::median(abs(ref_data_cell_properties[[5]] - sim_data_cell_properties[[5]]))
+    MAD_outcell <- stats::median(abs(ref_data_cell_properties[[6]] - sim_data_cell_properties[[6]]))
 
     ## KS Distance
-    if(!requireNamespace("provenance")){
+    if(!requireNamespace("provenance", quietly = TRUE)){
       message("Installing provenance package...")
-      install.packages("provenance")
+      utils::install.packages("provenance")
     }
     message("2-KS")
     KS_library <- provenance::KS.diss(ref_data_cell_properties[[1]], sim_data_cell_properties[[1]])
@@ -107,10 +115,11 @@ data_properties_summary <- function(
     KS_elibrary <- provenance::KS.diss(ref_data_cell_properties[[5]], sim_data_cell_properties[[5]])
 
     ## MAE
-    if(!requireNamespace("MLmetrics")){
+    if(!requireNamespace("MLmetrics", quietly = TRUE)){
       message("Installing MLmetrics package...")
-      install.packages("MLmetrics")
+      utils::install.packages("MLmetrics")
     }
+
     message("3-MAE")
     MAE_library <- MLmetrics::MAE(sim_data_cell_properties[[1]], ref_data_cell_properties[[1]])
     MAE_cellzero <- MLmetrics::MAE(sim_data_cell_properties[[2]], ref_data_cell_properties[[2]])
@@ -136,78 +145,82 @@ data_properties_summary <- function(
     RMSE_elibrary <- MLmetrics::RMSE(sim_data_cell_properties[[5]], ref_data_cell_properties[[5]])
     RMSE_outcell <- MLmetrics::RMSE(sim_data_cell_properties[[6]], ref_data_cell_properties[[6]])
 
+
     ## OV
-    if(!requireNamespace("overlapping")){
+    if(!requireNamespace("overlapping", quietly = TRUE)){
       message("Installing overlapping package...")
       install.packages("overlapping")
     }
     message("5-OV")
-    OV_library <- as.numeric(overlapping::overlap(list(x = ref_data_cell_properties[[1]],
-                                                       y = sim_data_cell_properties[[1]]))[["OV"]])
-    OV_cellzero <- as.numeric(overlapping::overlap(list(x = ref_data_cell_properties[[2]],
-                                                        y = sim_data_cell_properties[[2]]))[["OV"]])
-    OV_cellcor <- as.numeric(overlapping::overlap(list(x = ref_data_cell_properties[[3]],
-                                                       y = sim_data_cell_properties[[3]]))[["OV"]])
-    if(any(is.na(sim_data_cell_properties[[4]][1]))){
-      OV_TMM <- NA
-    }else{
-      OV_TMM <- as.numeric(overlapping::overlap(list(x = ref_data_cell_properties[[4]],
-                                                     y = sim_data_cell_properties[[4]]))[["OV"]])
+    if(requireNamespace("overlapping", quietly = TRUE)){
+      OV_library <- as.numeric(overlapping::overlap(list(x = ref_data_cell_properties[[1]],
+                                                         y = sim_data_cell_properties[[1]]))[["OV"]])
+      OV_cellzero <- as.numeric(overlapping::overlap(list(x = ref_data_cell_properties[[2]],
+                                                          y = sim_data_cell_properties[[2]]))[["OV"]])
+      OV_cellcor <- as.numeric(overlapping::overlap(list(x = ref_data_cell_properties[[3]],
+                                                         y = sim_data_cell_properties[[3]]))[["OV"]])
+      if(any(is.na(sim_data_cell_properties[[4]][1]))){
+        OV_TMM <- NA
+      }else{
+        OV_TMM <- as.numeric(overlapping::overlap(list(x = ref_data_cell_properties[[4]],
+                                                       y = sim_data_cell_properties[[4]]))[["OV"]])
+      }
+      OV_elibrary <- as.numeric(overlapping::overlap(list(x = ref_data_cell_properties[[5]],
+                                                          y = sim_data_cell_properties[[5]]))[["OV"]])
     }
-    OV_elibrary <- as.numeric(overlapping::overlap(list(x = ref_data_cell_properties[[5]],
-                                                        y = sim_data_cell_properties[[5]]))[["OV"]])
+
     ## bhattacharyya distance
-    if(!requireNamespace("philentropy")){
+    if(!requireNamespace("philentropy", quietly = TRUE)){
       message("Installing philentropy package...")
-      install.packages("philentropy")
+      utils::install.packages("philentropy")
     }
     message("6-bhattacharyya distance")
-    BH_library <- philentropy::distance(rbind(ref_data_cell_properties$library_size/sum(ref_data_cell_properties$library_size),
-                                              sim_data_cell_properties$library_size/sum(sim_data_cell_properties$library_size)),
+    if(requireNamespace("philentropy", quietly = TRUE)){
+      BH_library <- philentropy::distance(rbind(ref_data_cell_properties$library_size/sum(ref_data_cell_properties$library_size),
+                                                sim_data_cell_properties$library_size/sum(sim_data_cell_properties$library_size)),
+                                          method = "bhattacharyya")
+      BH_cellzero <- philentropy::distance(rbind(ref_data_cell_properties$zero_fraction_cell/sum(ref_data_cell_properties$zero_fraction_cell),
+                                                 sim_data_cell_properties$zero_fraction_cell/sum(sim_data_cell_properties$zero_fraction_cell)),
+                                           method = "bhattacharyya")
+      BH_cellcor <- philentropy::distance(rbind(ref_data_cell_properties$cell_cor/sum(ref_data_cell_properties$cell_cor),
+                                                sim_data_cell_properties$cell_cor/sum(sim_data_cell_properties$cell_cor)),
+                                          method = "bhattacharyya")
+      if(any(is.na(sim_data_cell_properties$TMM_factor))){
+        BH_TMM <- NA
+      }else{
+        BH_TMM <- philentropy::distance(rbind(ref_data_cell_properties$TMM_factor/sum(ref_data_cell_properties$TMM_factor),
+                                              sim_data_cell_properties$TMM_factor/sum(sim_data_cell_properties$TMM_factor)),
                                         method = "bhattacharyya")
-    BH_cellzero <- philentropy::distance(rbind(ref_data_cell_properties$zero_fraction_cell/sum(ref_data_cell_properties$zero_fraction_cell),
-                                               sim_data_cell_properties$zero_fraction_cell/sum(sim_data_cell_properties$zero_fraction_cell)),
-                                         method = "bhattacharyya")
-    BH_cellcor <- philentropy::distance(rbind(ref_data_cell_properties$cell_cor/sum(ref_data_cell_properties$cell_cor),
-                                              sim_data_cell_properties$cell_cor/sum(sim_data_cell_properties$cell_cor)),
-                                        method = "bhattacharyya")
-    if(any(is.na(sim_data_cell_properties$TMM_factor))){
-      BH_TMM <- NA
-    }else{
-      BH_TMM <- philentropy::distance(rbind(ref_data_cell_properties$TMM_factor/sum(ref_data_cell_properties$TMM_factor),
-                                            sim_data_cell_properties$TMM_factor/sum(sim_data_cell_properties$TMM_factor)),
-                                      method = "bhattacharyya")
+      }
+      BH_elibrary <- philentropy::distance(rbind(ref_data_cell_properties$effective_library_size/sum(ref_data_cell_properties$effective_library_size),
+                                                 sim_data_cell_properties$effective_library_size/sum(sim_data_cell_properties$effective_library_size)),
+                                           method = "bhattacharyya")
     }
-    BH_elibrary <- philentropy::distance(rbind(ref_data_cell_properties$effective_library_size/sum(ref_data_cell_properties$effective_library_size),
-                                               sim_data_cell_properties$effective_library_size/sum(sim_data_cell_properties$effective_library_size)),
-                                         method = "bhattacharyya")
 
-
-    ## Bivariate
-    if(!requireNamespace("RcppParallel")){
-      message("Installing RcppParallel package...")
-      install.packages("RcppParallel")
-    }
-    if(!requireNamespace("fasano.franceschini.test")){
-      message("Installing fasano.franceschini.test package...")
-      install.packages("fasano.franceschini.test")
-    }
-    if(!requireNamespace("ks")){
-      message("Installing ks package...")
-      install.packages("ks")
-    }
     message("7-library size vs zero fraction of cells")
     libraryvscellzero_ref <- matrix(c(log10(ref_data_cell_properties$library_size)+1,
                                       ref_data_cell_properties$zero_fraction_cell), ncol = 2)
     libraryvscellzero_sim <- matrix(c(log10(sim_data_cell_properties$library_size)+1,
                                       sim_data_cell_properties$zero_fraction_cell), ncol = 2)
-    libraryvscellzero <- fasano.franceschini.test::fasano.franceschini.test(
-      libraryvscellzero_ref,
-      libraryvscellzero_sim,
-      threads = ncore)
-    libraryvscellzero <- mean(libraryvscellzero$estimate)
-
-    KDE_libraryvscellzero <- ks::kde.test(libraryvscellzero_ref, libraryvscellzero_sim)$zstat
+    ## Bivariate
+    if(!requireNamespace("fasano.franceschini.test", quietly = TRUE)){
+      message("Installing fasano.franceschini.test package...")
+      utils::install.packages("fasano.franceschini.test")
+    }
+    if(!requireNamespace("ks", quietly = TRUE)){
+      message("Installing ks package...")
+      utils::install.packages("ks")
+    }
+    if(requireNamespace("fasano.franceschini.test", quietly = TRUE)){
+      libraryvscellzero <- fasano.franceschini.test::fasano.franceschini.test(
+        libraryvscellzero_ref,
+        libraryvscellzero_sim,
+        threads = ncore)
+      libraryvscellzero <- mean(libraryvscellzero$estimate)
+    }
+    if(requireNamespace("ks", quietly = TRUE)){
+      KDE_libraryvscellzero <- ks::kde.test(libraryvscellzero_ref, libraryvscellzero_sim)$zstat
+    }
   }
 
 
@@ -274,78 +287,85 @@ data_properties_summary <- function(
     ## MAD
     message("Gene properties...")
     message("1-MAD")
-    MAD_mean <- median(abs(ref_data_gene_properties[[1]] - sim_data_gene_properties[[1]]))
-    MAD_sd <- median(abs(ref_data_gene_properties[[2]] - sim_data_gene_properties[[2]]))
-    MAD_cv <- median(abs(ref_data_gene_properties[[3]] - sim_data_gene_properties[[3]]))
-    MAD_genezero <- median(abs(ref_data_gene_properties[[4]] - sim_data_gene_properties[[4]]))
-    MAD_dispersion <- median(abs(ref_data_gene_properties[[5]] - sim_data_gene_properties[[5]]))
-    MAD_outgene <- median(abs(ref_data_gene_properties[[6]] - sim_data_gene_properties[[6]]))
+    MAD_mean <- stats::median(abs(ref_data_gene_properties[[1]] - sim_data_gene_properties[[1]]))
+    MAD_sd <- stats::median(abs(ref_data_gene_properties[[2]] - sim_data_gene_properties[[2]]))
+    MAD_cv <- stats::median(abs(ref_data_gene_properties[[3]] - sim_data_gene_properties[[3]]))
+    MAD_genezero <- stats::median(abs(ref_data_gene_properties[[4]] - sim_data_gene_properties[[4]]))
+    MAD_dispersion <- stats::median(abs(ref_data_gene_properties[[5]] - sim_data_gene_properties[[5]]))
+    MAD_outgene <- stats::median(abs(ref_data_gene_properties[[6]] - sim_data_gene_properties[[6]]))
 
     ## KS Distance
-    if(!requireNamespace("provenance")){
+    if(!requireNamespace("provenance", quietly = TRUE)){
       message("Installing provenance package...")
-      install.packages("provenance")
+      utils::install.packages("provenance")
     }
     message("2-KS")
-    KS_mean <- provenance::KS.diss(ref_data_gene_properties[[1]], sim_data_gene_properties[[1]])
-    KS_sd <- provenance::KS.diss(ref_data_gene_properties[[2]], sim_data_gene_properties[[2]])
-    KS_cv <- provenance::KS.diss(ref_data_gene_properties[[3]], sim_data_gene_properties[[3]])
-    KS_genezero <- provenance::KS.diss(ref_data_gene_properties[[4]], sim_data_gene_properties[[4]])
-    KS_dispersion <- provenance::KS.diss(ref_data_gene_properties[[5]], sim_data_gene_properties[[5]])
+    if(requireNamespace("provenance", quietly = TRUE)){
+      KS_mean <- provenance::KS.diss(ref_data_gene_properties[[1]], sim_data_gene_properties[[1]])
+      KS_sd <- provenance::KS.diss(ref_data_gene_properties[[2]], sim_data_gene_properties[[2]])
+      KS_cv <- provenance::KS.diss(ref_data_gene_properties[[3]], sim_data_gene_properties[[3]])
+      KS_genezero <- provenance::KS.diss(ref_data_gene_properties[[4]], sim_data_gene_properties[[4]])
+      KS_dispersion <- provenance::KS.diss(ref_data_gene_properties[[5]], sim_data_gene_properties[[5]])
+    }
 
     ## MAE
-    if(!requireNamespace("MLmetrics")){
+    if(!requireNamespace("MLmetrics", quietly = TRUE)){
       message("Installing MLmetrics package...")
-      install.packages("MLmetrics")
+      utils::install.packages("MLmetrics")
     }
-    message("3-MAE")
-    MAE_mean <- MLmetrics::MAE(sim_data_gene_properties[[1]], ref_data_gene_properties[[1]])
-    MAE_sd <- MLmetrics::MAE(sim_data_gene_properties[[2]], ref_data_gene_properties[[2]])
-    MAE_cv <- MLmetrics::MAE(sim_data_gene_properties[[3]], ref_data_gene_properties[[3]])
-    MAE_genezero <- MLmetrics::MAE(sim_data_gene_properties[[4]], ref_data_gene_properties[[4]])
-    MAE_dispersion <- MLmetrics::MAE(sim_data_gene_properties[[5]], ref_data_gene_properties[[5]])
-    MAE_outgene <- MLmetrics::MAE(sim_data_gene_properties[[6]], ref_data_gene_properties[[6]])
+    if(requireNamespace("MLmetrics", quietly = TRUE)){
+      message("3-MAE")
+      MAE_mean <- MLmetrics::MAE(sim_data_gene_properties[[1]], ref_data_gene_properties[[1]])
+      MAE_sd <- MLmetrics::MAE(sim_data_gene_properties[[2]], ref_data_gene_properties[[2]])
+      MAE_cv <- MLmetrics::MAE(sim_data_gene_properties[[3]], ref_data_gene_properties[[3]])
+      MAE_genezero <- MLmetrics::MAE(sim_data_gene_properties[[4]], ref_data_gene_properties[[4]])
+      MAE_dispersion <- MLmetrics::MAE(sim_data_gene_properties[[5]], ref_data_gene_properties[[5]])
+      MAE_outgene <- MLmetrics::MAE(sim_data_gene_properties[[6]], ref_data_gene_properties[[6]])
 
-    ## RMSE
-    message("4-RMSE")
-    RMSE_mean <- MLmetrics::RMSE(sim_data_gene_properties[[1]], ref_data_gene_properties[[1]])
-    RMSE_sd <- MLmetrics::RMSE(sim_data_gene_properties[[2]], ref_data_gene_properties[[2]])
-    RMSE_cv <- MLmetrics::RMSE(sim_data_gene_properties[[3]], ref_data_gene_properties[[3]])
-    RMSE_genezero <- MLmetrics::RMSE(sim_data_gene_properties[[4]], ref_data_gene_properties[[4]])
-    RMSE_dispersion <- MLmetrics::RMSE(sim_data_gene_properties[[5]], ref_data_gene_properties[[5]])
-    RMSE_outgene <- MLmetrics::RMSE(sim_data_gene_properties[[6]], ref_data_gene_properties[[6]])
+      ## RMSE
+      message("4-RMSE")
+      RMSE_mean <- MLmetrics::RMSE(sim_data_gene_properties[[1]], ref_data_gene_properties[[1]])
+      RMSE_sd <- MLmetrics::RMSE(sim_data_gene_properties[[2]], ref_data_gene_properties[[2]])
+      RMSE_cv <- MLmetrics::RMSE(sim_data_gene_properties[[3]], ref_data_gene_properties[[3]])
+      RMSE_genezero <- MLmetrics::RMSE(sim_data_gene_properties[[4]], ref_data_gene_properties[[4]])
+      RMSE_dispersion <- MLmetrics::RMSE(sim_data_gene_properties[[5]], ref_data_gene_properties[[5]])
+      RMSE_outgene <- MLmetrics::RMSE(sim_data_gene_properties[[6]], ref_data_gene_properties[[6]])
+    }
 
     ## OV
-    message("5-OV")
-    OV_mean <- as.numeric(overlapping::overlap(list(x = sim_data_gene_properties[[1]],
-                                                    y = ref_data_gene_properties[[1]]))[["OV"]])
-    OV_sd <- as.numeric(overlapping::overlap(list(x = sim_data_gene_properties[[2]],
-                                                  y = ref_data_gene_properties[[2]]))[["OV"]])
-    OV_cv <- as.numeric(overlapping::overlap(list(x = sim_data_gene_properties[[3]],
-                                                  y = ref_data_gene_properties[[3]]))[["OV"]])
-    OV_genezero <- as.numeric(overlapping::overlap(list(x = sim_data_gene_properties[[4]],
-                                                        y = ref_data_gene_properties[[4]]))[["OV"]])
-    OV_dispersion <- as.numeric(overlapping::overlap(list(x = sim_data_gene_properties[[5]],
-                                                          y = ref_data_gene_properties[[5]]))[["OV"]])
+    if(requireNamespace("overlapping", quietly = TRUE)){
+      message("5-OV")
+      OV_mean <- as.numeric(overlapping::overlap(list(x = sim_data_gene_properties[[1]],
+                                                      y = ref_data_gene_properties[[1]]))[["OV"]])
+      OV_sd <- as.numeric(overlapping::overlap(list(x = sim_data_gene_properties[[2]],
+                                                    y = ref_data_gene_properties[[2]]))[["OV"]])
+      OV_cv <- as.numeric(overlapping::overlap(list(x = sim_data_gene_properties[[3]],
+                                                    y = ref_data_gene_properties[[3]]))[["OV"]])
+      OV_genezero <- as.numeric(overlapping::overlap(list(x = sim_data_gene_properties[[4]],
+                                                          y = ref_data_gene_properties[[4]]))[["OV"]])
+      OV_dispersion <- as.numeric(overlapping::overlap(list(x = sim_data_gene_properties[[5]],
+                                                            y = ref_data_gene_properties[[5]]))[["OV"]])
+    }
 
     ## bhattacharyya distance
-    message("6-bhattacharyya distance")
-    BH_mean <- philentropy::distance(rbind(ref_data_gene_properties$mean_expression/sum(ref_data_gene_properties$mean_expression),
-                                           sim_data_gene_properties$mean_expression/sum(sim_data_gene_properties$mean_expression)),
+    if(requireNamespace("philentropy", quietly = TRUE)){
+      message("6-bhattacharyya distance")
+      BH_mean <- philentropy::distance(rbind(ref_data_gene_properties$mean_expression/sum(ref_data_gene_properties$mean_expression),
+                                             sim_data_gene_properties$mean_expression/sum(sim_data_gene_properties$mean_expression)),
+                                       method = "bhattacharyya")
+      BH_sd <- philentropy::distance(rbind(ref_data_gene_properties$sd/sum(ref_data_gene_properties$sd),
+                                           sim_data_gene_properties$sd/sum(sim_data_gene_properties$sd)),
                                      method = "bhattacharyya")
-    BH_sd <- philentropy::distance(rbind(ref_data_gene_properties$sd/sum(ref_data_gene_properties$sd),
-                                         sim_data_gene_properties$sd/sum(sim_data_gene_properties$sd)),
-                                   method = "bhattacharyya")
-    BH_cv <- philentropy::distance(rbind(ref_data_gene_properties$cv/sum(ref_data_gene_properties$cv),
-                                         sim_data_gene_properties$cv/sum(sim_data_gene_properties$cv)),
-                                   method = "bhattacharyya")
-    BH_genezero <- philentropy::distance(rbind(ref_data_gene_properties$zero_fraction_gene/sum(ref_data_gene_properties$zero_fraction_gene),
-                                               sim_data_gene_properties$zero_fraction_gene/sum(sim_data_gene_properties$zero_fraction_gene)),
-                                         method = "bhattacharyya")
-    BH_dispersion <- philentropy::distance(rbind(ref_data_gene_properties$dispersion/sum(ref_data_gene_properties$dispersion),
-                                                 sim_data_gene_properties$dispersion/sum(sim_data_gene_properties$dispersion)),
+      BH_cv <- philentropy::distance(rbind(ref_data_gene_properties$cv/sum(ref_data_gene_properties$cv),
+                                           sim_data_gene_properties$cv/sum(sim_data_gene_properties$cv)),
+                                     method = "bhattacharyya")
+      BH_genezero <- philentropy::distance(rbind(ref_data_gene_properties$zero_fraction_gene/sum(ref_data_gene_properties$zero_fraction_gene),
+                                                 sim_data_gene_properties$zero_fraction_gene/sum(sim_data_gene_properties$zero_fraction_gene)),
                                            method = "bhattacharyya")
-
+      BH_dispersion <- philentropy::distance(rbind(ref_data_gene_properties$dispersion/sum(ref_data_gene_properties$dispersion),
+                                                   sim_data_gene_properties$dispersion/sum(sim_data_gene_properties$dispersion)),
+                                             method = "bhattacharyya")
+    }
 
     ## Bivariate
     ### mean vs sd
@@ -354,15 +374,17 @@ data_properties_summary <- function(
                              ref_data_gene_properties$sd), ncol = 2)
     meanvssd_sim <- matrix(c(sim_data_gene_properties$mean_expression,
                              sim_data_gene_properties$sd), ncol = 2)
+    if(requireNamespace("fasano.franceschini.test", quietly = TRUE)){
+      meanvssd <- fasano.franceschini.test::fasano.franceschini.test(
+        meanvssd_ref,
+        meanvssd_sim,
+        threads = ncore)
+      meanvssd <- mean(meanvssd$estimate)
+    }
 
-    meanvssd <- fasano.franceschini.test::fasano.franceschini.test(
-      meanvssd_ref,
-      meanvssd_sim,
-      threads = ncore)
-    meanvssd <- mean(meanvssd$estimate)
-
-    KDE_meanvssd <- ks::kde.test(meanvssd_ref, meanvssd_sim)$zstat
-
+    if(requireNamespace("ks", quietly = TRUE)){
+      KDE_meanvssd <- ks::kde.test(meanvssd_ref, meanvssd_sim)$zstat
+    }
 
     ### mean vs zero
     message("8-mean expression vs zero fraction of genes")
@@ -371,13 +393,16 @@ data_properties_summary <- function(
     meanvszero_sim <- matrix(c(sim_data_gene_properties$mean_expression,
                                sim_data_gene_properties$zero_fraction_gene), ncol = 2)
 
-    meanvszero <- fasano.franceschini.test::fasano.franceschini.test(
-      meanvszero_ref,
-      meanvszero_sim,
-      threads = ncore)
-    meanvszero <- mean(meanvszero$estimate)
-
-    KDE_meanvszero <- ks::kde.test(meanvszero_ref, meanvszero_sim)$zstat
+    if(requireNamespace("fasano.franceschini.test", quietly = TRUE)){
+      meanvszero <- fasano.franceschini.test::fasano.franceschini.test(
+        meanvszero_ref,
+        meanvszero_sim,
+        threads = ncore)
+      meanvszero <- mean(meanvszero$estimate)
+    }
+    if(requireNamespace("ks", quietly = TRUE)){
+      KDE_meanvszero <- ks::kde.test(meanvszero_ref, meanvszero_sim)$zstat
+    }
 
 
     ### mean vs dispersion
@@ -386,14 +411,17 @@ data_properties_summary <- function(
                                      ref_data_gene_properties$dispersion), ncol = 2)
     meanvsdispersion_sim <- matrix(c(sim_data_gene_properties$mean_expression,
                                      sim_data_gene_properties$dispersion), ncol = 2)
+    if(requireNamespace("fasano.franceschini.test", quietly = TRUE)){
+      meanvsdispersion <- fasano.franceschini.test::fasano.franceschini.test(
+        meanvsdispersion_ref,
+        meanvsdispersion_sim,
+        threads = ncore)
+      meanvsdispersion <- mean(meanvsdispersion$estimate)
+    }
 
-    meanvsdispersion <- fasano.franceschini.test::fasano.franceschini.test(
-      meanvsdispersion_ref,
-      meanvsdispersion_sim,
-      threads = ncore)
-    meanvsdispersion <- mean(meanvsdispersion$estimate)
-
-    KDE_meanvsdispersion <- ks::kde.test(meanvsdispersion_ref, meanvsdispersion_sim)$zstat
+    if(requireNamespace("ks", quietly = TRUE)){
+      KDE_meanvsdispersion <- ks::kde.test(meanvsdispersion_ref, meanvsdispersion_sim)$zstat
+    }
   }
 
 

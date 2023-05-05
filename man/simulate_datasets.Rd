@@ -12,8 +12,7 @@ simulate_datasets(
   n = 1,
   seed = simutils::random_seed(),
   return_format = "SingleCellExperiment",
-  verbose = TRUE,
-  use_docker = FALSE
+  verbose = TRUE
 )
 }
 \arguments{
@@ -45,11 +44,6 @@ vector. If you do not input this parameter, the default value(s) will be used.}
 Seurat and h5ad.}
 
 \item{verbose}{Logical. Whether to return messages or not.}
-
-\item{use_docker}{Logical. Default is FALSE. Whether to execute the simulation
-step by establishing a Docker container or not. Suggest that you would better
-use Docker to execute the step in order to avoid the issues caused by coding
-environment.}
 }
 \description{
 This is the core function of simulating scRNA-seq datasets. Users can execute

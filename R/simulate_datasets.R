@@ -26,10 +26,6 @@
 #' @param return_format A character. Alternatives choices: list, SingleCellExperiment,
 #' Seurat and h5ad.
 #' @param verbose Logical. Whether to return messages or not.
-#' @param use_docker Logical. Default is FALSE. Whether to execute the simulation
-#' step by establishing a Docker container or not. Suggest that you would better
-#' use Docker to execute the step in order to avoid the issues caused by coding
-#' environment.
 #'
 #' @importFrom stringr str_split
 #' @importFrom stats setNames
@@ -45,8 +41,7 @@ simulate_datasets <- function(
   n = 1,
   seed = simutils::random_seed(),
   return_format = "SingleCellExperiment",
-  verbose = TRUE,
-  use_docker = FALSE
+  verbose = TRUE
 ){
 
   # Check-----------------------------------------------------------------------
@@ -145,26 +140,15 @@ simulate_datasets <- function(
       }
       # Seed
       seed <- seed[id]
-      if(use_docker){
-        method_execute_container_simulate(
+      method_execute_function_simulate(
         parameters = parameters,
         method = every_exec_method[id],
         ref_data = ref_data,
         other_prior = other_prior_exec,
         return_format = return_format,
         seed = seed,
-        verbose = verbose)
-      }else{
-        method_execute_function_simulate(
-          parameters = parameters,
-          method = every_exec_method[id],
-          ref_data = ref_data,
-          other_prior = other_prior_exec,
-          return_format = return_format,
-          seed = seed,
-          verbose = verbose
-        )
-      }
+        verbose = verbose
+      )
     }
   )
   # Prepare list names----------------------------------------------------------
