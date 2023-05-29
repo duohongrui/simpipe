@@ -15,6 +15,7 @@ You can install the development version of simpipe from
 
 ``` r
 # install.packages("devtools")
+devtools::install_github("duohongrui/simmethods")
 devtools::install_github("duohongrui/simpipe")
 ```
 
@@ -39,6 +40,8 @@ and use
 package for linking R environmrnt and the Docker container. For more
 details, please refer to
 [Simsite](http://www.ciblab.net/software/Simsite/).
+
+## Contact
 
 If you have any question, please email to Hongrui Duo
 (<duohongrui@cqnu.edu.cn>) or raise an issue for that.
