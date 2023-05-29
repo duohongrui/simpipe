@@ -25,3 +25,20 @@ information**, please install **tislingshot** first by:
 # install.packages("devtools")
 devtools::install_github("dynverse/ti_slingshot/package/")
 ```
+
+## Usage
+
+The documentation of simpipe is availabel at our
+[Simsite](http://www.ciblab.net/software/Simsite/). In addition, you can
+also learn the usage of every simulation methods we have collected.
+
+Users can also download our simpipe [Docker
+Image](https://hub.docker.com/repository/docker/duohongrui/simpipe/general)
+and use
+[**simpipe2docker**](https://github.com/duohongrui/simpipe2docker)
+package for linking R environmrnt and the Docker container. For more
+details, please refer to
+[Simsite](http://www.ciblab.net/software/Simsite/).
+
+If you have any question, please email to Hongrui Duo
+(<duohongrui@cqnu.edu.cn>) or raise an issue for that.
