@@ -20,6 +20,7 @@
 #' @importFrom assertthat assert_that
 #' @importFrom purrr map
 #' @importFrom stats setNames
+#' @importFrom methods is
 #' @export
 #'
 estimate_parameters <- function(
@@ -30,6 +31,9 @@ estimate_parameters <- function(
   verbose = TRUE
 ){
   # Check-----------------------------------------------------------------------
+  if(methods::is(ref_data, "dgCMatrix")){
+    ref_data <- as.matrix(ref_data)
+  }
   if(is.matrix(ref_data)){
     ref_data <- list(refdata = ref_data)
   }

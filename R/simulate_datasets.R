@@ -30,6 +30,7 @@
 #' @importFrom stringr str_split
 #' @importFrom stats setNames
 #' @importFrom simutils add_class
+#' @importFrom methods is
 #'
 #' @export
 #'
@@ -77,6 +78,9 @@ simulate_datasets <- function(
     }
     if(any(c("scDesign", "SPsimSeq", "SCRIP", "zingeR", "zinbwaveZinger", "SimBPDD") %in% method)){
       ## ref data for these two methods
+      if(methods::is(ref_data, "dgCMatrix")){
+        ref_data <- as.matrix(ref_data)
+      }
       if(is.matrix(ref_data)){
         ref_data <- list(ref_data = ref_data)
       }
