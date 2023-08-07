@@ -3,6 +3,7 @@
 export(data_functionality_summary)
 export(data_properties_summary)
 export(estimate_parameters)
+export(prepare_DEGs_list)
 export(simulate_datasets)
 import(simutils)
 importFrom(MLmetrics,MAE)

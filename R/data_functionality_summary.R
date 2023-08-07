@@ -273,17 +273,27 @@ data_functionality_summary <- function(
   }
 
   ### DEGs evaluation
-  DEGs_evaluation <- simutils::calculate_DEGs_properties(
-    count_matrix = count_matrices,
-    group = group,
-    DEGs = DEGs,
-    DEA_method = DEA_method,
-    model_method = model_method,
-    verbose = verbose
-  )
+  if(!is.null(DEGs)){
+    cat("-------------------------------------------------\n")
+    cat("                  Evaluating DEGs\n")
+    cat("-------------------------------------------------\n")
+    DEGs_evaluation <- simutils::calculate_DEGs_properties(
+      count_matrix = count_matrices,
+      group = group,
+      DEGs = DEGs,
+      DEA_method = DEA_method,
+      model_method = model_method,
+      verbose = verbose
+    )
+  }else{
+    DEGs_evaluation <- NULL
+  }
 
   ### batch evaluation
   if(!is.null(batch)){
+    cat("-------------------------------------------------\n")
+    cat("             Evaluating cell batches\n")
+    cat("-------------------------------------------------\n")
     batch_evaluation <- purrr::map(
       .x = 1:data_number,
       .f = function(id){
@@ -307,6 +317,9 @@ data_functionality_summary <- function(
 
   ### group evaluation
   if(!is.null(group)){
+    cat("-------------------------------------------------\n")
+    cat("             Evaluating cell groups\n")
+    cat("-------------------------------------------------\n")
     group_evaluation <- purrr::map(
       .x = 1:data_number,
       .f = function(id){
