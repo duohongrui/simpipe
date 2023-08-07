@@ -1,14 +1,18 @@
 #' Summarize the Functionality in Group, Batch and DEGs of A Simulation Method
 #'
 #' @param data The matrix or data frame of gene expression profile or the output by `simpipe::simulate_datasets`.
-#' @param group The characters of group names which cells belong to. Needed if data is a matrix or a dataframe and you want to evaluate the groups.
+#' @param group The characters of group names which cells belong to. Needed if data is a matrix or a dataframe and you want to evaluate the groups, DEGs and trajectories.
 #' @param batch The characters of batch names which cells belong to. Needed if data is a matrix or a dataframe and you want to evaluate the batches
 #' @param k k-nearest neighborhoods of cells.
 #' @param DEGs A list of DEGs with the names of `xxxvsxxx`. Note that the names of DEGs are in the rownames of the matrix or the dataframe and the names of `xxx` is in the `group` characters. Needed if data is a matrix or a dataframe and you want to evaluate the DEGs.
 #' @param DEA_method The DEA method to get the DEGs. Choices: edgeRQLF, edgeRQLFDetRate, MASTcpmDetRate, MASTtpmDetRate, MASTcpm, MASTtpm, limmatrend, limmavoom, ttest and wilcox. Default is edgeRQLFDetRate.
 #' @param model_method The method to establish the model. SVM, Decision tree or RF (Random Forest). Default is SVM.
+#' @param ref_data A matrix, data frame or list of real gene expression profiles.
+#' @param ref_data_grouping The vector or list of group names which real cells belong to.
+#' @param algorithm The algorithm for matching the real cells and the simulated cells. Hungarian (default) or Improved_Hungarian.
+#' @param seed Random seed for trajectory inference.
 #' @param verbose Whether the process massages are returned.
-#' @param threads How many cores used for parallel computation
+#' @param threads How many cores used for parallel computation.
 #' @importFrom SingleCellExperiment counts colData rowData
 #' @importFrom simutils calculate_DEGs_properties calculate_batch_properties calculate_cluster_properties
 #' @importFrom methods is
@@ -24,6 +28,10 @@ data_functionality_summary <- function(
   DEGs = NULL,
   DEA_method = "edgeRQLFDetRate",
   model_method = "SVM",
+  ref_data = NULL,
+  ref_data_grouping = NULL,
+  algorithm = "Hungarian",
+  seed = 1,
   verbose = TRUE,
   threads = 1
 ){
@@ -342,9 +350,78 @@ data_functionality_summary <- function(
     group_evaluation <- NULL
   }
 
+  ### trajectory evaluation
+  if(!is.null(ref_data)){
+    cat("-------------------------------------------------\n")
+    cat("             Evaluating trajectories\n")
+    cat("-------------------------------------------------\n")
+
+    ## list of reference dataset
+    if(is.list(ref_data)){
+      ref_count_matrices <- ref_data
+      ref_data_number <- length(ref_count_matrices)
+      if(is.list(ref_data_grouping)){
+        if(length(ref_data) != length(ref_data_grouping)){
+          stop("The length of ref_data must equal to that of information of cell groups.")
+        }else{
+          ref_group <- ref_data_grouping
+        }
+      }else{
+        if(is.vector(ref_data_grouping)){
+          ref_group <- purrr::map(ref_data_number, .f = function(x){ref_data_grouping})
+        }else{
+          ref_group <- ref_data_grouping
+        }
+      }
+    }
+
+    ## dataframe or matrix
+    if(is.matrix(ref_data) | is.data.frame(ref_data)){
+      if(is.data.frame(ref_data)){
+        ref_count_matrices <- list("data" = as.matrix(ref_data))
+      }else{
+        ref_count_matrices <- list("data" = ref_data)
+      }
+      ref_data_number <- length(ref_count_matrices)
+      ## group
+      if(!is.null(ref_data_grouping)){
+        message("The group information of reference data is input...")
+        ref_group <- list("data" = ref_data_grouping)
+      }else{
+        ref_group <- ref_data_grouping
+      }
+    }
+
+    ## length between reference and simulated datasets
+    if(length(count_matrices) != length(ref_count_matrices)){
+      stop("The number of reference datasets in a list must equal to that of simulated datasets in the list.")
+    }
+
+    ## evaluating trajectories
+    trajectory_evaluation <- purrr::map(
+      .x = 1:ref_data_number,
+      .f = function(id){
+        ref_traj_data <- ref_count_matrices[[id]]
+        ref_traj_info <- ref_group[[id]]
+        simutils::calculate_trajectory_properties(
+          ref_data = ref_traj_data,
+          ref_data_grouping = ref_traj_info,
+          sim_data = count_matrices[[id]],
+          sim_data_grouping = group[[id]],
+          algorithm = algorithm,
+          seed = seed,
+          verbose = verbose
+        )
+      }
+    ) %>% stats::setNames(names(count_matrices))
+  }else{
+    trajectory_evaluation <- NULL
+  }
+
   dplyr::lst(group_evaluation,
              batch_evaluation,
-             DEGs_evaluation)
+             DEGs_evaluation,
+             trajectory_evaluation)
 
 }
 

@@ -12,6 +12,10 @@ data_functionality_summary(
   DEGs = NULL,
   DEA_method = "edgeRQLFDetRate",
   model_method = "SVM",
+  ref_data = NULL,
+  ref_data_grouping = NULL,
+  algorithm = "Hungarian",
+  seed = 1,
   verbose = TRUE,
   threads = 1
 )
@@ -19,7 +23,7 @@ data_functionality_summary(
 \arguments{
 \item{data}{The matrix or data frame of gene expression profile or the output by \code{simpipe::simulate_datasets}.}
 
-\item{group}{The characters of group names which cells belong to. Needed if data is a matrix or a dataframe and you want to evaluate the groups.}
+\item{group}{The characters of group names which cells belong to. Needed if data is a matrix or a dataframe and you want to evaluate the groups, DEGs and trajectories.}
 
 \item{batch}{The characters of batch names which cells belong to. Needed if data is a matrix or a dataframe and you want to evaluate the batches}
 
@@ -31,9 +35,17 @@ data_functionality_summary(
 
 \item{model_method}{The method to establish the model. SVM, Decision tree or RF (Random Forest). Default is SVM.}
 
+\item{ref_data}{A matrix, data frame or list of real gene expression profiles.}
+
+\item{ref_data_grouping}{The vector or list of group names which real cells belong to.}
+
+\item{algorithm}{The algorithm for matching the real cells and the simulated cells. Hungarian (default) or Improved_Hungarian.}
+
+\item{seed}{Random seed for trajectory inference.}
+
 \item{verbose}{Whether the process massages are returned.}
 
-\item{threads}{How many cores used for parallel computation}
+\item{threads}{How many cores used for parallel computation.}
 }
 \value{
 A list of three aspects of the data
