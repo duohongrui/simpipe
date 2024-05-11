@@ -1,7 +1,7 @@
 Package: simpipe
 Type: Package
 Title: A standard pipeline of simulating single-cell RNA sequencing data
-Version: 0.0.0.9000
+Version: 1.0.0
 Authors@R: 
     c(person("Hongrui", "Duo", role = c("aut", "cre"),
       email = "Duohongrui@cqnu.edu.cn",
@@ -43,5 +43,5 @@ LazyData: true
 biocViews:
 Author: Hongrui Duo [aut, cre] (<https://orcid.org/0000-0001-8683-015X>),
     Bo Li [aut] (<https://orcid.org/0000-0001-9944-0003>)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
