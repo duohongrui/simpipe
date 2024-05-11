@@ -1,7 +1,7 @@
 Package: simpipe
 Type: Package
 Title: A standard pipeline of simulating single-cell RNA sequencing data
-Version: 1.0.0
+Version: 1.0
 Authors@R: 
     c(person("Hongrui", "Duo", role = c("aut", "cre"),
       email = "Duohongrui@cqnu.edu.cn",
