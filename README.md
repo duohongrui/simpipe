@@ -45,3 +45,10 @@ details, please refer to
 
 If you have any question, please email to Hongrui Duo
 (<duohongrui@cqnu.edu.cn>) or raise an issue for that.
+
+## Citation
+
+Duo H, Li Y, Lan Y, *et al*. Systematic evaluation with practical
+guidelines for single-cell and spatially resolved transcriptomics data
+simulation under multiple scenarios. ***Genome Biology***, 2024, 25(1):
+145.
